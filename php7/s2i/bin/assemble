@@ -17,9 +17,8 @@ if [[ "$1" == "-h" ]]; then
 	exec /usr/libexec/s2i/usage
 fi
 
-
+id
 echo "---> INSTALANDO CODIGO FUENTE..."
 cp -Rf /tmp/src/* /var/www/localhost/htdocs/
-/usr/libexec/s2i/fix-permissions.sh /var/www
 rm -rf /tmp/src
 
