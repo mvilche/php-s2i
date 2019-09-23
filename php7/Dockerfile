@@ -20,7 +20,7 @@ chown  -R 1001  /var/www/logs/ /run/apache2  /var/www/localhost/htdocs /etc/apac
 chgrp -R 0 /var/www/logs/ /run/apache2  /var/www/localhost/htdocs /etc/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chmod -R g=u /var/www/logs/ /run/apache2  /var/www/localhost/htdocs /etc/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i
 WORKDIR /var/www/localhost/htdocs
-USER 1001:0
+USER 1001
 EXPOSE 8080
 CMD ["/usr/libexec/s2i/usage"]
 
