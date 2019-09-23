@@ -20,7 +20,5 @@ fi
 
 echo "---> INSTALANDO CODIGO FUENTE..."
 cp -Rf /tmp/src/* /var/www/localhost/htdocs/ && \
-chown 1001 -R /var/www/localhost/htdocs
-chgrp 0 -R  /var/www/localhost/htdocs
 rm -rf /tmp/src
 
