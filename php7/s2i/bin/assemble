@@ -20,6 +20,6 @@ fi
 
 echo "---> INSTALANDO CODIGO FUENTE..."
 cp -Rf /tmp/src/* /var/www/localhost/htdocs/
-/usr/libexec/s2i/fix-permissions /var/www
+/usr/libexec/s2i/fix-permissions.sh /var/www
 rm -rf /tmp/src
 
