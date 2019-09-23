@@ -1,0 +1,228 @@
+    ##comienzo Template
+  apiVersion: v1
+  kind: Template
+  metadata:
+    name: php-s2i-mvilche
+    labels:
+      template: php-s2i-mvilche
+      autor: "Martin_Fabrizzio_Vilche"
+    annotations:
+      openshift.io/display-name: "php-s2i-mvilche"
+      iconClass: "icon-github"
+      description: >-
+        PHP S2I HTTPD ALPINE
+        Martin Fabrizzio Vilche.
+        https://github.com/mvilche.
+
+  objects:
+
+
+
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        app: "${APP_NAME}"
+      name: "${APP_NAME}"
+    spec:
+      replicas: 1
+      revisionHistoryLimit: 10
+      selector:
+        app: ${APP_NAME}
+        deploymentconfig: ${APP_NAME}
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}
+            deploymentconfig: ${APP_NAME}
+        spec:
+          containers:
+            - image: "${APP_NAME}:latest"
+              imagePullPolicy: Always
+              name: ${APP_NAME}
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          terminationGracePeriodSeconds: 30
+      test: false
+      triggers:
+        - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${APP_NAME}
+            from:
+              kind: ImageStreamTag
+              name: "${APP_NAME}:latest"
+          type: ImageChange
+
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      labels:
+        app: ${APP_NAME}
+      name: ${APP_NAME}
+    spec:
+      completionDeadlineSeconds: 1800
+      failedBuildsHistoryLimit: 5
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: ${APP_NAME}:latest
+      postCommit: {}
+      resources: {}
+      runPolicy: Serial
+      source:
+        git:
+          uri: ${REPO_GIT}
+          ref: ${BRANCH_GIT}
+        type: Git
+        sourceSecret:
+          name: ${SOURCE_SECRET}
+      strategy:
+        sourceStrategy:
+          forcePull: true
+          from:
+            kind: ImageStreamTag
+            name: php${PHP_VERSION}-s2i:latest
+        type: Source
+      successfulBuildsHistoryLimit: 5
+      triggers:
+        - type: ConfigChange
+        - type: "imageChange"
+          imageChange:
+            from:
+              kind: "ImageStreamTag"
+              name: "php${PHP_VERSION}-s2i:latest"
+
+
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: ${APP_NAME}
+      name: ${APP_NAME}
+    spec:
+      ports:
+        - name: 8080-tcp
+          port: 8080
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        app: ${APP_NAME}
+        deploymentconfig: ${APP_NAME}
+      sessionAffinity: None
+      type: ClusterIP
+
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      labels:
+        app: ${APP_NAME}
+      name: ${APP_NAME}
+    spec:
+      port:
+        targetPort: 8080-tcp
+      to:
+        kind: Service
+        name: ${APP_NAME}
+        weight: 100
+      wildcardPolicy: None
+
+
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      labels:
+        app: ${APP_NAME}
+      name: ${APP_NAME}
+    spec: {}
+
+
+######
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      labels:
+        app: php${PHP_VERSION}-s2i
+        build: php${PHP_VERSION}-s2i
+      name: php${PHP_VERSION}-s2i
+    spec:
+      failedBuildsHistoryLimit: 5
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: 'php${PHP_VERSION}-s2i:latest'
+      postCommit: {}
+      resources: {}
+      runPolicy: Serial
+      source:
+        contextDir: php${PHP_VERSION}
+        git:
+          ref: master
+          uri: 'https://github.com/mvilche/php-s2i-openshift.git'
+        type: Git
+      strategy:
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+        type: Docker
+      successfulBuildsHistoryLimit: 5
+      triggers:
+        - type: ConfigChange
+
+
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      labels:
+        app: php${PHP_VERSION}-s2i
+      name: php${PHP_VERSION}-s2i
+    spec: {}
+
+######
+
+
+
+  parameters:
+    - name: APP_NAME
+      displayName: Nombre del microservicio
+      value: ''
+      required: true
+    - name: PHP_VERSION
+      displayName: Versión de php
+      value: '7'
+      required: true
+    - name: REPO_GIT
+      displayName: Repositorio git donde se encuentra la aplicacion
+      value: ""
+      required: true
+    - name: BRANCH_GIT
+      displayName: Nombre del branch del repositorio
+      value: ""
+      required: true
+    - name: SOURCE_SECRET
+      displayName: Nombre del secret para autenticacion con el git
+      value: ""
+      required: true
+
+
+
