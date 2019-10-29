@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# S2I assemble script for the 's2i-maven-java' image.
+# The 'assemble' script builds your application source so that it is ready to run.
+#
+# For more information refer to the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+set -e
+
+DOCROOT="/var/www/html"
+SHARE="/usr/share/httpd"
+shopt -u dotglob
+
+
+if [[ "$1" == "-h" ]]; then
+	exec /usr/libexec/s2i/usage
+fi
+
+
+if [ -d /tmp/artifacts/.composer ]; then
+  echo "---> RESTAURANDO DEPENDENCIAS EN CACHE..."
+  mv /tmp/artifacts/.composer /usr/share/httpd/.composer
+fi
+
+
+
+echo "---> INSTALANDO CODIGO FUENTE..."
+cp -rf /tmp/src/.  $DOCROOT/
+rm -rf /tmp/src
+
+if [[ -f "$DOCROOT/composer.json" ]]; then
+echo "----> COMPOSER ENCONTRADO!"
+echo "----> INSTALANDO..."
+cd $DOCROOT	
+mkdir -p $SHARE/.composer
+echo "{}" > $SHARE/.composer/composer.json
+composer update -vvv --no-scripts -d $DOCROOT
+composer install -vvv --no-scripts -d $DOCROOT
+$EXTRA_COMPOSER_COMMAND
+echo "----> FIN INSTALACION COMPOSER..."
+fi
+
+
+
+#######################################
+echo "----> COMPLETANDO TAREAS ADICIONALES..."
+if [ $(find $DOCROOT/ -iname '.env*' | wc -l) -gt 0 ]; then
+echo "----> SE ENCONTRARON ARCHIVOS .env* EN LAS FUENTES - ELIMINANDO POR MOTIVOS DE SEGURIDAD..."
+echo "----> --------------------------------------------------------------------------------------------------"
+echo "----> NUNCA INCLUYA ARCHIVOS DE CONFIGURACION, CERTIFICADOS, O DATASOURCES ESPECIFICOS PARA CADA AMBIENTE DENTRO DE LAS IMAGENES..."
+echo "----> --------------------------------------------------------------------------------------------------"
+find $DOCROOT -iname '.env*' -exec rm -rf {} \;
+else
+#######################################
+echo "----> INSTALACION FINALIZADA"
+fi
