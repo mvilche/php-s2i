@@ -56,7 +56,5 @@ if [ "$MIGRATIONS" ]; then
 	echo "---->  INICIANDO APP..."
 	echo "···································································································"
 
-
-/opt/remi/$PHP_VERSION/root/usr/sbin/php-fpm -O
 rm -rf /var/run/httpd/*
 exec httpd -DFOREGROUND

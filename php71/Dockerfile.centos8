@@ -23,7 +23,11 @@ sed -i -e "s/^short_open_tag = Off/short_open_tag = On/" /etc/opt/remi/$PHP_VERS
 sed -i -e "s/^post_max_size = 8M/post_max_size = 80M/" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i -e "s/^upload_max_filesize = 2M/upload_max_filesize = 40M/" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i -e "s/^LogLevel warn/LogLevel Error/" /etc/opt/remi/$PHP_VERSION/php.ini && \
-sed -i "/;session.save_path/c\session.save_path=\/tmp" /etc/opt/remi/$PHP_VERSION/php.ini
+sed -i "/;session.save_path/c\session.save_path=\/tmp" /etc/opt/remi/$PHP_VERSION/php.ini && \
+sed -i -e "s/^LoadModule mpm_event_module/#LoadModule mpm_event_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
+sed -i -e "s/^#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
+sed -i -e "s/^LoadModule mpm_worker_module/#LoadModule mpm_worker_module/" /etc/httpd/conf.modules.d/00-mpm.conf
+
 
 
 RUN ln -s /usr/bin/$PHP_VERSION /usr/bin/php && \
@@ -38,7 +42,8 @@ RUN usermod -u 1001 apache && usermod -aG 0 apache && rm -rf /etc/localtime /var
 mkdir -p /usr/share/composer_install && \
 chown  -R 1001  /var/log/httpd/ /var/opt/remi /etc/opt/remi /opt/remi /usr/share/composer_install /run/httpd /var/www/html /usr/share/httpd /etc/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chgrp -R 0 /var/log/httpd/ /run/httpd /opt/remi /etc/opt/remi /var/opt/remi /var/www/html  /usr/share/composer_install /usr/share/httpd /etc/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod -R g=u /var/log/httpd/ /run/httpd /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /etc/httpd /usr/share/httpd /etc/timezone /etc/localtime /usr/libexec/s2i
+chmod -R g=u /var/log/httpd/ /run/httpd /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /etc/httpd /usr/share/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chown --dereference 1001 /dev/stdout /dev/stderr /proc/self/fd/1 /proc/self/fd/2
 
 RUN yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum &> /dev/null
 WORKDIR /var/www/html
