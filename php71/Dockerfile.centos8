@@ -13,9 +13,9 @@ LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
       
 
 RUN yum update -y && yum install $EPEL yum-utils -y && yum install $REMI -y && \
-yum install $PHP_VERSION $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
+yum --enablerepo=remi install $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
 $PHP_VERSION-php-common $PHP_VERSION-php-intl $PHP_VERSION-php-mysqlnd $PHP_VERSION-php-mbstring $PHP_VERSION-php-pecl-zip $PHP_VERSION-php-gd $PHP_VERSION-php-ldap \
-openssl unzip curl nc httpd -y
+openssl unzip curl nc httpd which -y
 
 RUN sed -i -e "s/^Listen 80/Listen 8080/" /etc/httpd/conf/httpd.conf && \
 sed -ri -e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' /etc/httpd/conf/httpd.conf && \
@@ -28,11 +28,14 @@ sed -i -e "s/^LoadModule mpm_event_module/#LoadModule mpm_event_module/" /etc/ht
 sed -i -e "s/^#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
 sed -i -e "s/^LoadModule mpm_worker_module/#LoadModule mpm_worker_module/" /etc/httpd/conf.modules.d/00-mpm.conf
 
+ENV HOME /usr/share/httpd
+ENV PATH=/opt/remi/$PHP_VERSION/root/usr/bin:/opt/remi/$PHP_VERSION/root/usr/sbin${PATH:+:${PATH}}
+ENV LD_LIBRARY_PATH=/opt/remi/$PHP_VERSION/root/usr/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+ENV MANPATH=/opt/remi/$PHP_VERSION/root/usr/share/man:${MANPATH}
 
-
-RUN ln -s /usr/bin/$PHP_VERSION /usr/bin/php && \
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-php composer-setup.php --install-dir=/usr/local/bin --filename=composer && rm composer-setup.php
+RUN echo "VERSION PHP INSTALADA: " && php -version && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+php composer-setup.php --install-dir=/usr/local/bin --filename=composer && rm composer-setup.php && \
+yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum &> /dev/null
 
 COPY s2i/bin/ /usr/libexec/s2i
 
@@ -45,10 +48,7 @@ chgrp -R 0 /var/log/httpd/ /run/httpd /opt/remi /etc/opt/remi /var/opt/remi /var
 chmod -R g=u /var/log/httpd/ /run/httpd /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /etc/httpd /usr/share/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chown --dereference 1001 /dev/stdout /dev/stderr /proc/self/fd/1 /proc/self/fd/2
 
-RUN yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum &> /dev/null
 WORKDIR /var/www/html
-
-ENV HOME /usr/share/httpd
 
 USER 1001:0
 
