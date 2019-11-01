@@ -21,6 +21,22 @@
 | MIGRATIONS | Activa las migraciones con artisan. true/false  |
 
 
+### Generate builder image
+
+```console
+
+ docker build -t s2i-php:71 -f php71/Dockerfile.centos8 php71
+
+```
+
+### Generate application image using s2i
+
+```console
+
+s2i builder https://github.com/my_phpapp.git s2i-php:71 myphp_app:latest --incremental
+
+```
+
 
 License
 ----
