@@ -38,6 +38,14 @@ s2i builder https://github.com/my_phpapp.git s2i-php:71 myphp_app:latest --incre
 ```
 
 
+### How using s2i
+
+```console
+
+https://github.com/openshift/source-to-image
+
+```
+
 License
 ----
 

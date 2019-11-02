@@ -28,10 +28,10 @@ sed -i -e "s/^LoadModule mpm_event_module/#LoadModule mpm_event_module/" /etc/ht
 sed -i -e "s/^#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
 sed -i -e "s/^LoadModule mpm_worker_module/#LoadModule mpm_worker_module/" /etc/httpd/conf.modules.d/00-mpm.conf
 
-ENV HOME /usr/share/httpd
-ENV PATH=/opt/remi/$PHP_VERSION/root/usr/bin:/opt/remi/$PHP_VERSION/root/usr/sbin${PATH:+:${PATH}}
-ENV LD_LIBRARY_PATH=/opt/remi/$PHP_VERSION/root/usr/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-ENV MANPATH=/opt/remi/$PHP_VERSION/root/usr/share/man:${MANPATH}
+ENV HOME=/usr/share/httpd \
+PATH=/opt/remi/$PHP_VERSION/root/usr/bin:/opt/remi/$PHP_VERSION/root/usr/sbin${PATH:+:${PATH}} \
+LD_LIBRARY_PATH=/opt/remi/$PHP_VERSION/root/usr/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} \
+MANPATH=/opt/remi/$PHP_VERSION/root/usr/share/man:${MANPATH}
 
 RUN echo "VERSION PHP INSTALADA: " && php -version && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer && rm composer-setup.php && \

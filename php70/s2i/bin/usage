@@ -1,0 +1,9 @@
+#!/bin/bash -e
+cat <<EOF
+To use it, install S2I: https://github.com/openshift/source-to-image
+
+Ejemplo:
+
+sti build git://<source code> springboot-sti <application image>
+
+EOF

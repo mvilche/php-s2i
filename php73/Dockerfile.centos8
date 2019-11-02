@@ -1,6 +1,6 @@
 FROM centos:8
 
-ENV PHP_VERSION=php72 \
+ENV PHP_VERSION=php73 \
 EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
 REMI=https://rpms.remirepo.net/enterprise/remi-release-8.rpm
 
