@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
 
-# Funcionalidades:
+# Features
 
 - Non-root
 - Openshift compatible
@@ -10,15 +10,15 @@
 - Composer
 - Artisan Migrations
 
-### Variables
+### Environments
 
 
-| Variable | Detalle |
+| Environment | Details |
 | ------ | ------ |
-| TIMEZONE | Define la zona horaria a utilizar (America/Montevideo, America/El_salvador) |
-| WAITFOR_HOST | Especifica el host que debe estar activo antes de iniciar el servicio |
-| WAITFOR_PORT | Especifica el puerto del servicio WAITFOR_HOST |
-| MIGRATIONS | Activa las migraciones con artisan. true/false  |
+| TIMEZONE | Set Timezone (America/Montevideo, America/El_salvador) |
+| WAITFOR_HOST | set name host |
+| WAITFOR_PORT | set port for WAITFOR_HOST |
+| MIGRATIONS | Enable artisan migrations. true/false  |
 
 
 ### Generate builder image
