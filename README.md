@@ -29,7 +29,7 @@
 
 ```
 
-### Generate application image using s2i
+### Php application image use s2i
 
 ```console
 
@@ -38,7 +38,15 @@ s2i builder https://github.com/my_phpapp.git s2i-php:71 myphp_app:latest --incre
 ```
 
 
-### How using s2i
+### Run application
+
+```console
+
+docker run -p 8080:8080 myphp_app:latest
+
+```
+
+### How use s2i
 
 ```console
 
