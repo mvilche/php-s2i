@@ -35,7 +35,7 @@ fi
 
 DOCROOT=/var/www/html
 
-if [ "$MIGRATIONS" ]; then
+if [ "$MIGRATIONS" ] || [ ! -z "$MIGRATIONS" ]; then
 	echo "···································································································"
 	echo "----> MIGRACIONES AUTOMATICAS ACTIVADAS.."
 	
@@ -46,9 +46,10 @@ if [ "$MIGRATIONS" ]; then
 	cd $DOCROOT
 	php artisan key:generate
 	php artisan migrate 
+	else
+	echo "----> NO SE ENCONTRO ARTISAN - NADA PARA MIGRAR"
 	fi
 	else
-	echo "----> NO SE ENCONTRO ARTISAN" 
     echo "----> CONTINUANDO SIN MIGRACIONES"
 	fi
 
