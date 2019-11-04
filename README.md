@@ -1,4 +1,4 @@
-# PHP s2i images 
+# PHP S2I Images 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
 
