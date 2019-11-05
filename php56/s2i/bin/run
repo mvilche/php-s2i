@@ -35,7 +35,7 @@ fi
 
 DOCROOT=/var/www/html
 
-if [ "$MIGRATIONS" ] || [ ! -z "$MIGRATIONS" ]; then
+if [ "$MIGRATIONS" == 1 ]; then
 	echo "···································································································"
 	echo "----> MIGRACIONES AUTOMATICAS ACTIVADAS.."
 	

@@ -18,7 +18,7 @@
 | TIMEZONE | Set Timezone (America/Montevideo, America/El_salvador) |
 | WAITFOR_HOST | set name host |
 | WAITFOR_PORT | set port for WAITFOR_HOST |
-| MIGRATIONS | Enable artisan migrations. true/false  |
+| MIGRATIONS | Enable artisan migrations. 1/0  |
 
 
 ### Generate builder image
