@@ -8,9 +8,10 @@
 #	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
 
-pushd /usr/share/httpd >/dev/null
-if [ -d .composer ]; then
-    tar cf - .composer
+pushd /var/www/html >/dev/null
+if [ -d vendor ]; then
+    tar cf - vendor
 fi
 popd >/dev/null
+
 

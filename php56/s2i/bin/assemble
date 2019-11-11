@@ -19,9 +19,10 @@ if [[ "$1" == "-h" ]]; then
 fi
 
 
-if [ -d /tmp/artifacts/.composer ]; then
-  echo "---> RESTAURANDO DEPENDENCIAS EN CACHE..."
-  mv /tmp/artifacts/.composer /usr/share/httpd/.composer
+  if [ -d /tmp/artifacts/vendor ]; then
+  echo "---> RESTAURANDO VENDOR DESDE CACHE..."
+  mv /tmp/artifacts/vendor $DOCROOT/vendor
+
 fi
 
 
