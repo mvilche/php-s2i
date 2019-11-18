@@ -33,7 +33,7 @@
 
 ```console
 
-s2i builder https://github.com/my_phpapp.git s2i-php:71 myphp_app:latest --incremental
+s2i build https://github.com/my_phpapp.git s2i-php:71 myphp_app:latest --incremental
 
 ```
 
