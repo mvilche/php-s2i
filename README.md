@@ -21,6 +21,20 @@
 | MIGRATIONS | Enable artisan migrations. 1/0  |
 
 
+
+### How use in Openshift
+
+```console
+
+oc process -f php-s2i-template-openshift.yaml \ 
+-p PHP_VERSION=php72 \
+-p APP_NAME=miapp \ 
+-p APP_REPO=https://github.com/myuser/php-composer-sample-app.git | oc create -f -
+
+```
+
+
+
 ### Generate builder image
 
 ```console
