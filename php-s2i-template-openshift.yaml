@@ -54,6 +54,8 @@
                   value: 
                 - name: WAITFOR_PORT
                   value:
+                - name: TIMEZONE
+                  value: America/Montevideo
               image: "${APP_NAME}-${PHP_VERSION}:latest"
               imagePullPolicy: Always
               name: ${APP_NAME}
