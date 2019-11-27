@@ -33,7 +33,7 @@ fi
 
 DOCROOT=/var/www/html
 
-if [ -f "/opt/composer_env/env" ]
+if [ -f "/opt/composer_env/env" ]; then
 
 echo "----> CUSTOM ENV ENCONTRADO - UTILIZANDO.."
 

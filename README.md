@@ -35,6 +35,49 @@ oc process -f php-s2i-template-openshift.yaml \
 
 
 
+### Use configmap for database connection using composer env file
+
+##### Create a file yaml composer-env.yaml with keyname "env"
+
+```yaml
+
+apiVersion: v1
+data:
+  env: |-
+    APP_NAME=Lumen
+    APP_ENV=local
+    APP_KEY=
+    APP_DEBUG=true
+    APP_URL=http://miapp
+    APP_TIMEZONE=America/Montevideo
+    LOG_CHANNEL=stack
+    LOG_SLACK_WEBHOOK_URL=
+    DB_CONNECTION=mysql
+    DB_HOST=mysql
+    DB_PORT=3306
+    DB_DATABASE=database_name
+    DB_USERNAME=user
+    DB_PASSWORD=pass
+    CACHE_DRIVER=file
+    QUEUE_CONNECTION=sync
+kind: ConfigMap
+metadata:
+  name: composer-env
+
+```
+
+##### Create configmap in Openshift
+
+```console
+
+ oc create -f composer-env.yaml
+
+```
+
+##### IMPORTANT: Mount configmap in Pod /opt/composer_env
+
+
+
 ### Generate builder image
 
 ```console
