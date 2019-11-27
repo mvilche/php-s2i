@@ -31,9 +31,15 @@ if [ ! -z "$WAITFOR_HOST" ] && [ ! -z "$WAITFOR_PORT" ] ; then
 fi
 
 
-
-
 DOCROOT=/var/www/html
+
+if [ -f "/opt/composer_env/env" ]; then
+
+echo "----> CUSTOM ENV ENCONTRADO - UTILIZANDO.."
+
+cat /opt/composer_env/env > $DOCROOT/.env
+
+fi
 
 if [ "$MIGRATIONS" == 1 ]; then
 	echo "···································································································"
