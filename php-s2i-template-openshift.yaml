@@ -34,7 +34,7 @@
         resources:
           limits:
             cpu: 500m
-            memory: 512Mi
+            memory: 1024Mi
         rollingParams:
           intervalSeconds: 1
           maxSurge: 25%
