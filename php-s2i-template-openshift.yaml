@@ -34,7 +34,7 @@
         resources:
           limits:
             cpu: 500m
-            memory: 512Mi        
+            memory: 512Mi
         rollingParams:
           intervalSeconds: 1
           maxSurge: 25%
@@ -51,19 +51,19 @@
           containers:
             - env:
                 - name: WAITFOR_HOST
-                  value: 
+                  value:
                 - name: WAITFOR_PORT
                   value:
                 - name: TIMEZONE
                   value: America/Montevideo
                 - name: MIGRATIONS
-                  value: 0
+                  value: '0'
               image: "${APP_NAME}-${PHP_VERSION}:latest"
               imagePullPolicy: Always
               name: ${APP_NAME}
               ports:
                 - containerPort: 8080
-                  protocol: TCP                                                       
+                  protocol: TCP
               livenessProbe:
                 failureThreshold: 3
                 initialDelaySeconds: 60
@@ -87,11 +87,11 @@
                   cpu: 500m
                   memory: 512Mi
               terminationMessagePath: /dev/termination-log
-              terminationMessagePolicy: File                 
+              terminationMessagePolicy: File
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
-          terminationGracePeriodSeconds: 30           
+          terminationGracePeriodSeconds: 30
       test: false
       triggers:
         - type: ConfigChange
@@ -124,7 +124,7 @@
       resources:
         limits:
           cpu: 500m
-          memory: 512Mi 
+          memory: 512Mi
       runPolicy: Serial
       source:
         git:
@@ -151,7 +151,7 @@
       labels:
         app: ${PHP_VERSION}-s2i
       name: ${APP_NAME}-${PHP_VERSION}
-    spec: {}              
+    spec: {}
 
 
 
@@ -168,7 +168,7 @@
         - name: http
           port: 8080
           protocol: TCP
-          targetPort: 8080                                 
+          targetPort: 8080
       selector:
         app: ${PHP_VERSION}-s2i
         deploymentconfig: ${APP_NAME}
@@ -189,7 +189,7 @@
         kind: Service
         name: ${APP_NAME}
         weight: 100
-      wildcardPolicy: None  
+      wildcardPolicy: None
 
 
 
@@ -253,7 +253,7 @@
     - name: APP_REPO
       displayName: Php application repository
       value: 'https://github.com/myuser/php-composer-sample-app.git'
-      required: true            
+      required: true
 
   ###############
 
