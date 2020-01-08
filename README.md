@@ -1,4 +1,4 @@
-# PHP S2I Images 
+# PHP S2I Images CentOS 8
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
 
