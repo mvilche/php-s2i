@@ -16,7 +16,6 @@
 
   objects:
 
-
   - apiVersion: v1
     data:
       env: |-
@@ -86,8 +85,8 @@
                 - containerPort: 8080
                   protocol: TCP
               livenessProbe:
-                failureThreshold: 3
-                initialDelaySeconds: 60
+                failureThreshold: 5
+                initialDelaySeconds: 10
                 periodSeconds: 20
                 successThreshold: 1
                 httpGet:
@@ -95,8 +94,8 @@
                   path: /
                 timeoutSeconds: 15
               readinessProbe:
-                failureThreshold: 3
-                initialDelaySeconds: 60
+                failureThreshold: 5
+                initialDelaySeconds: 10
                 periodSeconds: 20
                 successThreshold: 1
                 httpGet:
