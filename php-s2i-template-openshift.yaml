@@ -56,6 +56,7 @@
       strategy:
         activeDeadlineSeconds: 21600
         resources:
+          requests:          
             cpu: 100m
             memory: 256Mi          
           limits:
@@ -103,6 +104,7 @@
                   path: /
                 timeoutSeconds: 15
               resources:
+                requests:
                   cpu: 100m
                   memory: 256Mi          
                 limits:
@@ -111,7 +113,7 @@
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
               volumeMounts:
-                - mountPath: /opt/custom_env
+                - mountPath: /opt/composer_env
                   name: composer-env-${APP_NAME}                 
           dnsPolicy: ClusterFirst
           restartPolicy: Always
@@ -151,6 +153,9 @@
           name: ${APP_NAME}-${PHP_VERSION}:latest
       postCommit: {}
       resources:
+        requests:          
+          cpu: 100m
+          memory: 100Mi          
         limits:
           cpu: 500m
           memory: 1024Mi
@@ -238,6 +243,9 @@
           name: '${PHP_VERSION}-s2i:latest'
       postCommit: {}
       resources:
+        requests:          
+          cpu: 100m
+          memory: 100Mi          
         limits:
           cpu: 500m
           memory: 1024Mi
