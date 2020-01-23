@@ -61,5 +61,6 @@ echo "----> --------------------------------------------------------------------
 find $DOCROOT -iname '.env*' -exec rm -rf {} \;
 else
 #######################################
+/usr/libexec/s2i/fix $DOCROOT -p
 echo "----> INSTALACION FINALIZADA"
 fi
