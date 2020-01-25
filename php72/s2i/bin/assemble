@@ -29,7 +29,6 @@ exit 1
 fi
 export JAVA_OPTS="-XX:-UseContainerSupport -Dfile.encoding=UTF8 -XX:+ExitOnOutOfMemoryError"
 cd $DOCROOT && \
-git fetch --unshallow
 /opt/sonar/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECTKEY -Dsonar.projectName=$SONARQUBE_PROJECTNAME \
 -Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.scm.enabled=true -Dsonar.scm.provider=git \
 -Dsonar.sourceEncoding=UTF-8
