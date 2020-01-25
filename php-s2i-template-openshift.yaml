@@ -162,8 +162,8 @@
           cpu: 100m
           memory: 100Mi          
         limits:
-          cpu: 500m
-          memory: 1024Mi
+          cpu: 1024m
+          memory: 2048Mi
       runPolicy: Serial
       source:
         git:

@@ -11,7 +11,8 @@ set -e
 shopt -u dotglob
 DOCROOT="/var/www/html"
 SHARE="/usr/share/httpd"
-
+export COMPOSER_MEMORY_LIMIT=-1
+export JAVA_OPTS="-XX:-UseContainerSupport -Dfile.encoding=UTF8 -XX:+ExitOnOutOfMemoryError"
 
 
 function sonarqube() {
@@ -27,7 +28,6 @@ echo "----> ERROR NO SE ENCONTRARON LAS VARIABLES REQUERIDAS."
 echo "----> VERIFIQUE SONARQUBE_HOST, SONARQUBE_PROJECTNAME, SONARQUBE_PROJECTKEY."
 exit 1
 fi
-export JAVA_OPTS="-XX:-UseContainerSupport -Dfile.encoding=UTF8 -XX:+ExitOnOutOfMemoryError"
 cd $DOCROOT && \
 /opt/sonar/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECTKEY -Dsonar.projectName=$SONARQUBE_PROJECTNAME \
 -Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.scm.enabled=false
