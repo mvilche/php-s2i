@@ -31,7 +31,7 @@ cd $DOCROOT && \
 composer require rogervila/php-sonarqube-scanner --dev
 vendor/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECTKEY -Dsonar.projectName=$SONARQUBE_PROJECTNAME \
 -Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST
-composer remove rogervila/php-sonarqube-scanner
+composer remove rogervila/php-sonarqube-scanner --dev
 rm -rf $DOCROOT/vendor
 else 
 echo "----> SONARQUBE DESACTIVADO."
