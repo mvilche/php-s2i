@@ -30,7 +30,7 @@ fi
 cd $DOCROOT && \
 composer require rogervila/php-sonarqube-scanner
 vendor/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECTKEY -Dsonar.projectName=$SONARQUBE_PROJECTNAME \
--Dsonar.exclusions="vendor/**, node_modules/**, .scannerwork/**" -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST
+-Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST
 composer remove rogervila/php-sonarqube-scanner
 rm -rf $DOCROOT/vendor
 else 
