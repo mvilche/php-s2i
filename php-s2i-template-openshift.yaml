@@ -165,6 +165,15 @@
         type: Git
       strategy:
         sourceStrategy:
+          env:
+            - name: SONARQUBE_ENABLED
+              value:
+            - name: SONARQUBE_HOST
+              value:
+            - name: SONARQUBE_PROJECTKEY
+              value: 
+            - name: SONARQUBE_PROJECTNAME
+              value:           
           incremental: true
           from:
             kind: ImageStreamTag
