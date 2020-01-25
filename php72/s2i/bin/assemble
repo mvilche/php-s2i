@@ -28,7 +28,7 @@ echo "----> VERIFIQUE SONARQUBE_HOST, SONARQUBE_PROJECTNAME, SONARQUBE_PROJECTKE
 exit 1
 fi
 cd $DOCROOT && \
-composer require rogervila/php-sonarqube-scanner
+composer require rogervila/php-sonarqube-scanner --dev
 vendor/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECTKEY -Dsonar.projectName=$SONARQUBE_PROJECTNAME \
 -Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST
 composer remove rogervila/php-sonarqube-scanner
@@ -46,14 +46,6 @@ if [[ "$1" == "-h" ]]; then
 	exec /usr/libexec/s2i/usage
 fi
 
-echo "---> INSTALANDO CODIGO FUENTE..."
-cp -rf /tmp/src/.  $DOCROOT/
-rm -rf /tmp/src
-
-#### sonarqube function
-sonarqube
-#####
-
 
   if [ -d /tmp/artifacts/vendor ]; then
   echo "---> RESTAURANDO VENDOR DESDE CACHE..."
@@ -61,6 +53,14 @@ sonarqube
   rm -rf /tmp/artifacts
 
 fi
+
+echo "---> INSTALANDO CODIGO FUENTE..."
+cp -rf /tmp/src/.  $DOCROOT/
+rm -rf /tmp/src
+
+#### sonarqube function
+sonarqube
+#####
 
 if [[ -f "$DOCROOT/composer.json" ]]; then
 echo "----> COMPOSER ENCONTRADO!"
