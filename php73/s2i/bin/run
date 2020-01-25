@@ -41,6 +41,8 @@ cat /opt/composer_env/env > $DOCROOT/.env
 
 fi
 
+
+
 if [ "$MIGRATIONS" == 1 ]; then
 	echo "···································································································"
 	echo "----> MIGRACIONES AUTOMATICAS ACTIVADAS.."

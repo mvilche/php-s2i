@@ -8,10 +8,37 @@
 #
 
 set -e
-
+shopt -u dotglob
 DOCROOT="/var/www/html"
 SHARE="/usr/share/httpd"
-shopt -u dotglob
+export COMPOSER_MEMORY_LIMIT=-1
+export JAVA_OPTS="-XX:-UseContainerSupport -Dfile.encoding=UTF8 -XX:+ExitOnOutOfMemoryError"
+
+
+function sonarqube() {
+
+
+if [[ "$SONARQUBE_ENABLED" == 1 ]]; then
+echo "----> SONARQUBE ACTIVADO."
+echo "----> VALIDANDO DATOS DE CONEXION.."
+
+if [[ -z "$SONARQUBE_HOST" ]] || [[ -z "$SONARQUBE_PROJECTKEY" ]] || [[ -z "$SONARQUBE_PROJECTNAME" ]]; then
+
+echo "----> ERROR NO SE ENCONTRARON LAS VARIABLES REQUERIDAS."
+echo "----> VERIFIQUE SONARQUBE_HOST, SONARQUBE_PROJECTNAME, SONARQUBE_PROJECTKEY."
+exit 1
+fi
+cd $DOCROOT && \
+/opt/sonar/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECTKEY -Dsonar.projectName=$SONARQUBE_PROJECTNAME \
+-Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.scm.enabled=false
+echo "----> SONARQUBE ANALISIS FINALIZADO!."
+else 
+echo "----> SONARQUBE DESACTIVADO."
+fi
+
+
+}
+
 
 
 if [[ "$1" == "-h" ]]; then
@@ -21,15 +48,18 @@ fi
 
   if [ -d /tmp/artifacts/vendor ]; then
   echo "---> RESTAURANDO VENDOR DESDE CACHE..."
-  mv /tmp/artifacts/vendor $DOCROOT/vendor
+  cp -rf /tmp/artifacts/vendor $DOCROOT/vendor
+  rm -rf /tmp/artifacts
 
 fi
-
-
 
 echo "---> INSTALANDO CODIGO FUENTE..."
 cp -rf /tmp/src/.  $DOCROOT/
 rm -rf /tmp/src
+
+#### sonarqube function
+sonarqube
+#####
 
 if [[ -f "$DOCROOT/composer.json" ]]; then
 echo "----> COMPOSER ENCONTRADO!"
@@ -61,5 +91,6 @@ echo "----> --------------------------------------------------------------------
 find $DOCROOT -iname '.env*' -exec rm -rf {} \;
 else
 #######################################
+/usr/libexec/s2i/fix $DOCROOT
 echo "----> INSTALACION FINALIZADA"
 fi

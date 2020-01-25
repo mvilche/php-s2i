@@ -19,8 +19,8 @@ LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
 
 RUN echo "LANG=$LANG" > /etc/locale.conf && \
 yum install glibc-langpack-en glibc-langpack-es glibc-all-langpacks -y && yum update -y && yum install $EPEL yum-utils -y && yum install $REMI -y && \
-yum --enablerepo=remi install git $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
-$PHP_VERSION-php-common $PHP_VERSION-php-intl $PHP_VERSION-php-mysqlnd $PHP_VERSION-php-mbstring $PHP_VERSION-php-pecl-zip $PHP_VERSION-php-gd $PHP_VERSION-php-ldap \
+yum --enablerepo=remi install nodejs git $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
+$PHP_VERSION-php-common $PHP_VERSION-php-intl $PHP_VERSION-php-mysqlnd $PHP_VERSION-php-geos $PHP_VERSION-php-pecl-geoip $PHP_VERSION-php-mbstring $PHP_VERSION-php-pecl-zip $PHP_VERSION-php-gd $PHP_VERSION-php-ldap \
 openssl unzip curl nc httpd which -y
 
 RUN sed -i -e "s/^Listen 80/Listen 8080/" /etc/httpd/conf/httpd.conf && \
@@ -46,6 +46,11 @@ RUN echo "VERSION PHP INSTALADA: " && php -version && php -r "copy('https://getc
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer && rm composer-setup.php && \
 yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum &> /dev/null 
 
+WORKDIR /opt
+
+RUN curl https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip -o sonar.zip && \
+unzip -o sonar.zip &> /dev/null && rm -rf sonar.zip && mv sonar-scanner* sonar 
+
 COPY s2i/bin/ /usr/libexec/s2i
 
 COPY security.conf /etc/httpd/conf.d/security.conf
@@ -54,7 +59,8 @@ RUN mkdir /opt/composer_env && usermod -u 1001 apache && usermod -aG 0 apache &&
 mkdir -p /usr/share/composer_install && \
 chown  -R 1001 /opt/composer_env /var/log/httpd/ /var/opt/remi /etc/opt/remi /opt/remi /usr/share/composer_install /run/httpd /var/www/html /usr/share/httpd /etc/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chgrp -R 0 /opt/composer_env /var/log/httpd/ /run/httpd /opt/remi /etc/opt/remi /var/opt/remi /var/www/html  /usr/share/composer_install /usr/share/httpd /etc/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod -R g=u /opt/composer_env /var/log/httpd/ /run/httpd /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /etc/httpd /usr/share/httpd /etc/timezone /etc/localtime /usr/libexec/s2i
+chmod -R g=u /opt/composer_env /var/log/httpd/ /run/httpd /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /etc/httpd /usr/share/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chmod +x /usr/libexec/s2i/*
 
 WORKDIR /var/www/html
 
