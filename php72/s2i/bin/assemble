@@ -30,7 +30,7 @@ fi
 export JAVA_OPTS="-XX:-UseContainerSupport -Dfile.encoding=UTF8 -XX:+ExitOnOutOfMemoryError"
 cd $DOCROOT && \
 /opt/sonar/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECTKEY -Dsonar.projectName=$SONARQUBE_PROJECTNAME \
--Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.scm.enabled=true -Dsonar.scm.provider=git \
+-Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.scm.enabled=false \
 -Dsonar.sourceEncoding=UTF-8
 else 
 echo "----> SONARQUBE DESACTIVADO."
