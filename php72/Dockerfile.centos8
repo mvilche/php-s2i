@@ -46,15 +46,16 @@ RUN echo "VERSION PHP INSTALADA: " && php -version && php -r "copy('https://getc
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer && rm composer-setup.php && \
 yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum &> /dev/null 
 
+WORKDIR /opt
+
+RUN curl https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip -o sonar.zip && \
+unzip -o sonar.zip &> /dev/null && rm -rf sonar.zip && mv sonar-scanner* sonar 
+
 COPY s2i/bin/ /usr/libexec/s2i
 
 COPY security.conf /etc/httpd/conf.d/security.conf
 
-WORKDIR /opt
-
-RUN curl https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip -o sonar.zip && \
-unzip -o sonar.zip &> /dev/null && rm -rf sonar.zip && mv sonar-scanner* sonar && \
-mkdir /opt/composer_env && usermod -u 1001 apache && usermod -aG 0 apache && rm -rf /etc/localtime /var/www/html/* /etc/httpd/conf.d/welcome.conf && touch /etc/localtime /etc/timezone && \
+RUN mkdir /opt/composer_env && usermod -u 1001 apache && usermod -aG 0 apache && rm -rf /etc/localtime /var/www/html/* /etc/httpd/conf.d/welcome.conf && touch /etc/localtime /etc/timezone && \
 mkdir -p /usr/share/composer_install && \
 chown  -R 1001 /opt/composer_env /var/log/httpd/ /var/opt/remi /etc/opt/remi /opt/remi /usr/share/composer_install /run/httpd /var/www/html /usr/share/httpd /etc/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chgrp -R 0 /opt/composer_env /var/log/httpd/ /run/httpd /opt/remi /etc/opt/remi /var/opt/remi /var/www/html  /usr/share/composer_install /usr/share/httpd /etc/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
