@@ -2,8 +2,7 @@
 
 ![Docker Stars](https://img.shields.io/docker/stars/mvilche/php-s2i.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/mvilche/php-s2i.svg)
-![Docker Automated](https://img.shields.io/docker/automated/mvilche/php-s2i.svg)
-![Docker Build](https://img.shields.io/docker/build/mvilche/php-s2i.svg)
+
 
 # Features
 
