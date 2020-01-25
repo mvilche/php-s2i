@@ -27,8 +27,11 @@ echo "----> ERROR NO SE ENCONTRARON LAS VARIABLES REQUERIDAS."
 echo "----> VERIFIQUE SONARQUBE_HOST, SONARQUBE_PROJECTNAME, SONARQUBE_PROJECTKEY."
 exit 1
 fi
+cd $DOCROOT && \
+git fetch --unshallow
 /opt/sonar/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECTKEY -Dsonar.projectName=$SONARQUBE_PROJECTNAME \
--Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.scm.enabled=true -Dsonar.scm.provider=git
+-Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.scm.enabled=true -Dsonar.scm.provider=git \
+-Dsonar.sourceEncoding=UTF-8 
 else 
 echo "----> SONARQUBE DESACTIVADO."
 fi
