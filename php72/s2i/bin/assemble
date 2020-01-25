@@ -28,7 +28,7 @@ echo "----> VERIFIQUE SONARQUBE_HOST, SONARQUBE_PROJECTNAME, SONARQUBE_PROJECTKE
 exit 1
 fi
 /opt/sonar/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECTKEY -Dsonar.projectName=$SONARQUBE_PROJECTNAME \
--Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST
+-Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.scm.enabled=true -Dsonar.scm.provider=git
 else 
 echo "----> SONARQUBE DESACTIVADO."
 fi
