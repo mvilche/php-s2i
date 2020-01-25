@@ -9,6 +9,7 @@
 - S2i build images
 - Composer
 - Artisan Migrations
+- Sonarqube Scanner
 
 ### Environments
 
