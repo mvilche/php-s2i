@@ -5,6 +5,7 @@
 ![Docker Automated](https://img.shields.io/docker/cloud/automated/mvilche/php-s2i)
 ![Docker Build](https://img.shields.io/docker/cloud/build/mvilche/php-s2i)
 
+
 # Features
 
 - Non-root
@@ -14,7 +15,7 @@
 - Artisan Migrations
 - Sonarqube Scanner
 
-### Environments
+### Deploy Environments 
 
 
 | Environment | Details |
@@ -23,10 +24,18 @@
 | WAITFOR_HOST | set name host |
 | WAITFOR_PORT | set port for WAITFOR_HOST |
 | MIGRATIONS | Enable artisan migrations. 1/0  |
+
+
+### Build Environments 
+
+
+| Environment | Details |
+| ------ | ------ |
 | SONARQUBE_ENABLED | Enable sonarqube scanner. 1/0  |
 | SONARQUBE_HOST | Sonarqube host. http://sonar.domain:9090  |
 | SONARQUBE_PROJECTNAME | Sonarqube project name  |
 | SONARQUBE_PROJECTKEY | Sonarqube project key  |
+
 
 
 
