@@ -14,6 +14,7 @@
 - Composer
 - Artisan Migrations
 - Sonarqube Scanner
+- Composer nexus private repository
 
 ### Deploy Environments 
 
@@ -35,6 +36,9 @@
 | SONARQUBE_HOST | Sonarqube host. http://sonar.domain:9090  |
 | SONARQUBE_PROJECTNAME | Sonarqube project name  |
 | SONARQUBE_PROJECTKEY | Sonarqube project key  |
+| NEXUS_COMPOSER_REPO | Url private composer repository  |
+
+
 
 
 
