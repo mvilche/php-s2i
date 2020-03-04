@@ -67,6 +67,13 @@ echo "----> INSTALANDO..."
 cd $DOCROOT	
 mkdir -p $SHARE/.composer
 echo "{}" > $SHARE/.composer/composer.json
+
+
+if [[ ! -z $NEXUS_COMPOSER_REPO ]]; then
+config -g secure-http false
+composer config repositories.custom '{"type": "composer", "url": "$NEXUS_COMPOSER_REPO", "secure-http": "false"}'
+fi
+
 composer update -vvv --no-scripts -d $DOCROOT
 composer install -vvv --no-scripts -d $DOCROOT
 $EXTRA_COMPOSER_COMMAND
