@@ -52,7 +52,7 @@ if [ "$MIGRATIONS" == 1 ]; then
 	echo "----> ARTISAN ENCONTRADO!"
     echo "----> EJECUTANDO MIGRACIONES..."
 	cd $DOCROOT
-	php artisan key:generate
+	php artisan key:generate --force
 	php artisan migrate --force
 	else
 	echo "----> NO SE ENCONTRO ARTISAN - NADA PARA MIGRAR"
