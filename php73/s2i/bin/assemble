@@ -70,8 +70,10 @@ echo "{}" > $SHARE/.composer/composer.json
 
 
 if [[ ! -z $NEXUS_COMPOSER_REPO ]]; then
+echo "----> NEXUS_COMPOSER_REPO ENCONTRADO!"
 composer config -g secure-http false
-composer config repositories.custom '{"type": "composer", "url": $NEXUS_COMPOSER_REPO, "secure-http": "false"}'
+composer config repositories.custom '{"type": "composer", "url": "nexus_custom_repo", "secure-http": "false"}'
+sed -i "s@nexus_custom_repo@$NEXUS_COMPOSER_REPO@" composer.json
 fi
 
 composer update -vvv --no-scripts -d $DOCROOT
