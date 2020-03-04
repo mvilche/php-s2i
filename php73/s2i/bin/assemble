@@ -78,7 +78,7 @@ composer config -g secure-http false
 composer config repositories.custom '{"type": "composer", "url": "nexus_custom_repo", "secure-http": "false"}'
 sed -i "s@nexus_custom_repo@$NEXUS_COMPOSER_REPO@" composer.json
 fi
-
+composer clear-cache
 composer update -vvv --no-scripts -d $DOCROOT
 composer install -vvv --no-scripts -d $DOCROOT
 $EXTRA_COMPOSER_COMMAND
