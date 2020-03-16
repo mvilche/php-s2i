@@ -104,7 +104,9 @@ echo "----> --------------------------------------------------------------------
 find $DOCROOT -iname '.env*' -exec rm -rf {} \;
 else
 #######################################
+echo "START FIX PERMISSIONS..."
 /usr/libexec/s2i/fix $SHARE
 /usr/libexec/s2i/fix $DOCROOT
+echo "FIX PERMISSIONS END"
 echo "----> INSTALACION FINALIZADA"
 fi
