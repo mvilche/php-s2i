@@ -102,9 +102,10 @@ echo "----> --------------------------------------------------------------------
 echo "----> NUNCA INCLUYA ARCHIVOS DE CONFIGURACION, CERTIFICADOS, O DATASOURCES ESPECIFICOS PARA CADA AMBIENTE DENTRO DE LAS IMAGENES..."
 echo "----> --------------------------------------------------------------------------------------------------"
 find $DOCROOT -iname '.env*' -exec rm -rf {} \;
-else
+fi
 #######################################
+echo "START FIX PERMISSIONS..."
 /usr/libexec/s2i/fix $SHARE
 /usr/libexec/s2i/fix $DOCROOT
+echo "FIX PERMISSIONS END"
 echo "----> INSTALACION FINALIZADA"
-fi
