@@ -58,8 +58,6 @@ oc process -f https://raw.githubusercontent.com/mvilche/php-s2i-openshift/master
 
 ### Use configmap for database connection using composer env file
 
-##### Create a file yaml composer-env.yaml with keyname "env"
-
 ```yaml
 
 apiVersion: v1
@@ -86,17 +84,6 @@ metadata:
   name: composer-env
 
 ```
-
-##### Create configmap in Openshift
-
-```console
-
- oc create -f composer-env.yaml
-
-```
-
-##### IMPORTANT: Mount configmap in Pod /opt/composer_env
-
 
 
 
