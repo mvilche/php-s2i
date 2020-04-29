@@ -1778,6 +1778,8 @@
                     value: America/Montevideo
                   - name: MIGRATIONS
                     value: '0'
+                  - name: ARTISAN_COMMAND_OVERRIDE
+                    value:
                 image: "${APP_NAME}-${PHP_VERSION}:latest"
                 imagePullPolicy: Always
                 name: ${APP_NAME}

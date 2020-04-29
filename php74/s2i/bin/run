@@ -52,8 +52,14 @@ if [ "$MIGRATIONS" == 1 ]; then
 	echo "----> ARTISAN ENCONTRADO!"
     echo "----> EJECUTANDO MIGRACIONES..."
 	cd $DOCROOT
-	php artisan key:generate --force
+	if [ ! -z "$ARTISAN_COMMAND_OVERRIDE" ]; then
+
+	echo "----> ARTISAN_COMMAND_OVERRIDE ENCONTRADO..."
+	$ARTISAN_COMMAND_OVERRIDE
+	else
+	php artisan key:generate --force 
 	php artisan migrate --force
+	fi
 	else
 	echo "----> NO SE ENCONTRO ARTISAN - NADA PARA MIGRAR"
 	fi

@@ -8,21 +8,6 @@
 #
 
 
-	echo "···································································································"
-	echo "---->  VARIABLE TIMEZONE NO SETEADA - INICIANDO CON VALORES POR DEFECTO"
-	echo "---->  POSIBLES VALORES: America/Montevideo | America/El_Salvador"
-	echo "···································································································"
-
-
-if [ "$AUTODOWNLOAD_CA_CURL" == 1 ]; then
-	echo "···································································································"
-	echo "---->  AUTODOWNLOAD_CA_CURL SETEADO"
-	echo "---->  DESCARGANDO CA DESDE https://curl.haxx.se/ca/cacert.pem"
-	echo "···································································································"
-	curl --remote-name --time-cond /etc/opt/remi/$PHP_VERSION/cacert.pem https://curl.haxx.se/ca/cacert.pem &> /dev/null
-fi
-
-
 if [ -z "$TIMEZONE" ]; then
 	echo "···································································································"
 	echo "---->  VARIABLE TIMEZONE NO SETEADA - INICIANDO CON VALORES POR DEFECTO"
@@ -67,8 +52,14 @@ if [ "$MIGRATIONS" == 1 ]; then
 	echo "----> ARTISAN ENCONTRADO!"
     echo "----> EJECUTANDO MIGRACIONES..."
 	cd $DOCROOT
-	php artisan key:generate --force
+	if [ ! -z "$ARTISAN_COMMAND_OVERRIDE" ]; then
+
+	echo "----> ARTISAN_COMMAND_OVERRIDE ENCONTRADO..."
+	$ARTISAN_COMMAND_OVERRIDE
+	else
+	php artisan key:generate --force 
 	php artisan migrate --force
+	fi
 	else
 	echo "----> NO SE ENCONTRO ARTISAN - NADA PARA MIGRAR"
 	fi
