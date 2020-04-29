@@ -8,6 +8,21 @@
 #
 
 
+	echo "···································································································"
+	echo "---->  VARIABLE TIMEZONE NO SETEADA - INICIANDO CON VALORES POR DEFECTO"
+	echo "---->  POSIBLES VALORES: America/Montevideo | America/El_Salvador"
+	echo "···································································································"
+
+
+if [ "$AUTODOWNLOAD_CA_CURL" == 1 ]; then
+	echo "···································································································"
+	echo "---->  AUTODOWNLOAD_CA_CURL SETEADO"
+	echo "---->  DESCARGANDO CA DESDE https://curl.haxx.se/ca/cacert.pem"
+	echo "···································································································"
+	curl --remote-name --time-cond /etc/opt/remi/$PHP_VERSION/cacert.pem https://curl.haxx.se/ca/cacert.pem &> /dev/null
+fi
+
+
 if [ -z "$TIMEZONE" ]; then
 	echo "···································································································"
 	echo "---->  VARIABLE TIMEZONE NO SETEADA - INICIANDO CON VALORES POR DEFECTO"
