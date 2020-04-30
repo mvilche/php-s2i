@@ -1,4 +1,4 @@
-# PHP S2I Images CentOS 8
+# PHP S2I Images CentOS 8 / Alpine
 
 ![Docker Stars](https://img.shields.io/docker/stars/mvilche/php-s2i.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/mvilche/php-s2i.svg)
@@ -30,13 +30,14 @@
 
 ### Build Environments 
 
+! Sonarqube only include in CentOS 8 Images
 
 | Environment | Details |
 | ------ | ------ |
 | SONARQUBE_ENABLED | Enable sonarqube scanner. 1/0  |
 | SONARQUBE_HOST | Sonarqube host. http://sonar.domain:9090  |
 | SONARQUBE_PROJECTNAME | Sonarqube project name  |
-| SONARQUBE_PROJECTKEY | Sonarqube project key  |
+| SONARQUBE_PROJECTKEY | Sonarqube project key  | 
 | NEXUS_COMPOSER_REPO | Url private composer repository  |
 
 
