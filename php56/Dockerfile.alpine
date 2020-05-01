@@ -15,7 +15,7 @@ LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
       io.openshift.s2i.scripts-url="image:///usr/libexec/s2i"
       
 
-RUN apk add --update --no-cache git busybox-suid findutils shadow apache2 bash curl \
+RUN apk add --update --no-cache git busybox-suid findutils tzdata shadow apache2 bash curl \
 $PHP_VERSION \
 $PHP_VERSION-pgsql \
 $PHP_VERSION-zip \
