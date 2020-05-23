@@ -92,7 +92,7 @@ echo "----> COMPLETANDO TAREAS ADICIONALES..."
 if [[ -d $DOCROOT/public ]]; then
 echo "----> SE ENCONTRO DIRECTORIO PUBLIC."
 echo "----> DEFINIENDO COMO DOCUMENTROOT.."
-sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' /etc/httpd/conf.d/security.conf
+sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' $APACHE_CONFIGDIR/conf.d/security.conf
 fi
 
 

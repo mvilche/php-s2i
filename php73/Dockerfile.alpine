@@ -122,7 +122,8 @@ chmod +x /usr/libexec/s2i/*
 
 WORKDIR /var/www/html
 
-ENV HOME /usr/share/httpd
+ENV HOME=/usr/share/httpd \
+APACHE_CONFIGDIR=/etc/apache 
 
 USER 1001:0
 
