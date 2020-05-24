@@ -1,4 +1,4 @@
-# PHP S2I Images CentOS 8 / Alpine
+# PHP S2I Images CentOS  / Alpine
 
 ![Docker Stars](https://img.shields.io/docker/stars/mvilche/php-s2i.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/mvilche/php-s2i.svg)
@@ -30,7 +30,7 @@
 
 ### Build Environments 
 
-! Sonarqube only include in CentOS 8 Images
+! Sonarqube only include in CentOS Images
 
 | Environment | Details |
 | ------ | ------ |
