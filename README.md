@@ -9,7 +9,7 @@
 # Features
 
 - Non-root
-- Openshift compatible
+- Openshift ready!
 - S2i build images
 - Composer
 - Artisan Migrations
