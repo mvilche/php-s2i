@@ -122,6 +122,14 @@ https://github.com/openshift/source-to-image
 
 ```
 
+### How use without s2i
+
+```console
+
+docker run --name my_php -p 8080:8080 -d -v ./source:/var/www/html mvilche/php-s2i:73-alpine 
+
+```
+
 License
 ----
 
