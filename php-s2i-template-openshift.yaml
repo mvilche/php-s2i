@@ -42,8 +42,11 @@
           log_errors = On
           upload_max_filesize = 8M
           post_max_size = 32M
-          curl.cainfo="/etc/opt/remi/$PHP_VERSION/cacert.pem"
-          openssl.cafile="/etc/opt/remi/$PHP_VERSION/cacert.pem"
+          curl.cainfo="/etc/opt/remi/${PHP_VERSION}/cacert.pem"
+          openssl.cafile="/etc/opt/remi/${PHP_VERSION}/cacert.pem"
+        htaccess: |-
+          #RequestHeader set X-Forwarded-Proto https
+          #RequestHeader set X-Forwarded-Port 443
       kind: ConfigMap
       metadata:
         name: ${APP_NAME}
@@ -131,6 +134,9 @@
                 volumeMounts:
                   - mountPath: /opt/composer_env
                     name: ${APP_NAME}-env
+                  - mountPath: /var/www/html/.htaccess
+                    subPath: .htaccess
+                    name: ${APP_NAME}-apache
                   - mountPath: /etc/opt/remi/${PHP_VERSION}/php.d/99_custom_overrides.ini
                     name: ${APP_NAME}-php
                     subPath: 99_custom_overrides.ini          
@@ -152,7 +158,14 @@
                   items:
                     - key: 99_custom_overrides.ini
                       path: 99_custom_overrides.ini
-                name: ${APP_NAME}-php                                 
+                name: ${APP_NAME}-php
+              - configMap:
+                  name: ${APP_NAME}
+                  defaultMode: 420
+                  items:
+                    - key: htaccess
+                      path: htaccess
+                name: ${APP_NAME}-apache                              
         test: false
         triggers:
           - type: ConfigChange
