@@ -79,7 +79,7 @@ composer config repositories.custom '{"type": "composer", "url": "nexus_custom_r
 sed -i "s@nexus_custom_repo@$NEXUS_COMPOSER_REPO@" composer.json
 composer config -g repo.packagist false
 fi
-composer update -vvv --no-scripts -d $DOCROOT
+#composer update -vvv --no-scripts -d $DOCROOT
 composer install -vvv --no-scripts -d $DOCROOT
 $EXTRA_COMPOSER_COMMAND
 echo "----> FIN INSTALACION COMPOSER..."
