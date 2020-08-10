@@ -68,9 +68,7 @@ cd $DOCROOT
 mkdir -p $SHARE/.composer
 echo "{}" > $SHARE/.composer/composer.json
 
-if [[ -f "$DOCROOT/composer.lock" ]]; then
-rm -rf composer.lock
-fi
+
 
 if [[ ! -z $NEXUS_COMPOSER_REPO ]]; then
 echo "----> NEXUS_COMPOSER_REPO ENCONTRADO!"
