@@ -17,6 +17,7 @@ LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
 
 RUN apk add --update --no-cache git busybox-suid tzdata nodejs findutils shadow apache2 bash curl \
 $PHP_VERSION \
+$PHP_VERSION-tidy \
 $PHP_VERSION-intl \
 $PHP_VERSION-openssl \
 $PHP_VERSION-dba \
