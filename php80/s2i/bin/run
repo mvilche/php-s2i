@@ -1,0 +1,75 @@
+#!/bin/bash -e
+#
+# S2I run script for the 'springboot-sti' image.
+# The run script executes the server that runs your application.
+#
+# For more information see the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+
+if [ -z "$TIMEZONE" ]; then
+	echo "···································································································"
+	echo "---->  VARIABLE TIMEZONE NO SETEADA - INICIANDO CON VALORES POR DEFECTO"
+	echo "---->  POSIBLES VALORES: America/Montevideo | America/El_Salvador"
+	echo "···································································································"
+else
+	echo "···································································································"
+	echo "---->  TIMEZONE SETEADO ENCONTRADO: " $TIMEZONE
+	echo "···································································································"
+	cat /usr/share/zoneinfo/$TIMEZONE > /etc/localtime && \
+	echo $TIMEZONE > /etc/timezone
+fi
+
+
+
+if [ ! -z "$WAITFOR_HOST" ] && [ ! -z "$WAITFOR_PORT" ] ; then
+	echo "···································································································"
+	echo "---->  WAITFOR  ACTIVADO.."
+    until nc -z -v -w5 $WAITFOR_HOST $WAITFOR_PORT &> /dev/null; do echo waiting for $WAITFOR_HOST; sleep 10; done;	
+	echo "···································································································"
+fi
+
+
+DOCROOT=/var/www/html
+
+if [ -f "/opt/composer_env/env" ]; then
+
+echo "----> CUSTOM ENV ENCONTRADO - UTILIZANDO.."
+
+cat /opt/composer_env/env > $DOCROOT/.env
+
+fi
+
+
+
+if [ "$MIGRATIONS" == 1 ]; then
+	echo "···································································································"
+	echo "----> MIGRACIONES AUTOMATICAS ACTIVADAS.."
+	
+	if [[ -f "$DOCROOT/artisan" ]]; then
+    
+	echo "----> ARTISAN ENCONTRADO!"
+    echo "----> EJECUTANDO MIGRACIONES..."
+	cd $DOCROOT
+	if [ ! -z "$ARTISAN_COMMAND_OVERRIDE" ]; then
+
+	echo "----> ARTISAN_COMMAND_OVERRIDE ENCONTRADO..."
+	$ARTISAN_COMMAND_OVERRIDE
+	else
+	php artisan key:generate --force 
+	php artisan migrate --force
+	fi
+	else
+	echo "----> NO SE ENCONTRO ARTISAN - NADA PARA MIGRAR"
+	fi
+	else
+    echo "----> CONTINUANDO SIN MIGRACIONES"
+	fi
+
+	echo "···································································································"
+	echo "---->  INICIANDO APP..."
+	echo "···································································································"
+
+rm -rf /var/run/httpd/*
+exec httpd -DFOREGROUND
