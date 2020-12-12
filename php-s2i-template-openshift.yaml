@@ -211,14 +211,14 @@
         strategy:
           sourceStrategy:
             env:
-              - name: SONARQUBE_ENABLED
-                value: ${SONARQUBE_ENABLED}
-              - name: SONARQUBE_HOST
-                value: ${SONARQUBE_HOST}
-              - name: SONARQUBE_PROJECTKEY
-                value: ${SONARQUBE_PROJECTKEY}
-              - name: SONARQUBE_PROJECTNAME
-                value: ${SONARQUBE_PROJECTNAME}
+              # - name: SONARQUBE_ENABLED
+              #   value: ${SONARQUBE_ENABLED}
+              # - name: SONARQUBE_HOST
+              #   value: ${SONARQUBE_HOST}
+              # - name: SONARQUBE_PROJECTKEY
+              #   value: ${SONARQUBE_PROJECTKEY}
+              # - name: SONARQUBE_PROJECTNAME
+              #   value: ${SONARQUBE_PROJECTNAME}
               - name: NEXUS_COMPOSER_REPO
                 value: ${NEXUS_COMPOSER_REPO}
             incremental: true
@@ -350,18 +350,18 @@
         displayName: Php application repository branch
         value: 'master'
         required: true        
-      - name: SONARQUBE_ENABLED
-        displayName: Enable sonarqube scanner. 1/0
-        value: ''
-      - name: SONARQUBE_HOST
-        displayName: Sonarqube host. http://sonar.domain:9090
-        value: ''
-      - name: SONARQUBE_PROJECTKEY
-        displayName: Sonarqube project key name
-        value: ''
-      - name: SONARQUBE_PROJECTNAME
-        displayName: Sonarqube project name
-        value: ''
+#      - name: SONARQUBE_ENABLED
+#        displayName: Enable sonarqube scanner. 1/0
+#        value: ''
+#      - name: SONARQUBE_HOST
+#        displayName: Sonarqube host. http://sonar.domain:9090
+#        value: ''
+#      - name: SONARQUBE_PROJECTKEY
+#        displayName: Sonarqube project key name
+#        value: ''
+#      - name: SONARQUBE_PROJECTNAME
+#        displayName: Sonarqube project name
+#        value: ''
       - name: NEXUS_COMPOSER_REPO
         displayName: Url private composer repository
         value: ''     

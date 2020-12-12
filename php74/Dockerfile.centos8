@@ -49,8 +49,8 @@ yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cach
 
 WORKDIR /opt
 
-RUN curl https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip -o sonar.zip && \
-unzip -o sonar.zip &> /dev/null && rm -rf sonar.zip && mv sonar-scanner* sonar 
+#RUN curl https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip -o sonar.zip && \
+#unzip -o sonar.zip &> /dev/null && rm -rf sonar.zip && mv sonar-scanner* sonar 
 
 COPY s2i/bin/ /usr/libexec/s2i
 

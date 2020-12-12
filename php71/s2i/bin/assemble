@@ -58,7 +58,7 @@ cp -rf /tmp/src/.  $DOCROOT/
 rm -rf /tmp/src
 
 #### sonarqube function
-sonarqube
+#sonarqube
 #####
 
 if [[ -f "$DOCROOT/composer.json" ]]; then
