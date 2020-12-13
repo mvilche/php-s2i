@@ -51,8 +51,6 @@ oc process -f https://raw.githubusercontent.com/mvilche/php-s2i-openshift/master
 
 ```
 
-
-
 ### Use configmap for database connection using composer env file
 
 ```yaml
