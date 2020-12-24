@@ -164,7 +164,7 @@
                   defaultMode: 420
                   items:
                     - key: htaccess
-                      path: htaccess
+                      path: .htaccess
                 name: ${APP_NAME}-apache                              
         test: false
         triggers:
