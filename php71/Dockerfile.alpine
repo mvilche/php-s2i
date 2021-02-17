@@ -102,7 +102,7 @@ $PHP_VERSION-xmlwriter
 
 RUN  sed -i -e "s/^Listen 80/Listen 8080/" /etc/apache2/httpd.conf && \
 sed -ri -e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' /etc/apache2/httpd.conf && \
-mkdir -p /etc/apache2/ca && curl -o /etc/apache2/ca/cacert.pem https://curl.haxx.se/ca/cacert.pem  
+mkdir -p /etc/apache2/ca && curl -o /etc/apache2/ca/cacert.pem https://curl.se/ca/cacert.pem  
 
 RUN ln -sf /usr/bin/$PHP_VERSION /usr/bin/php && \
 echo "VERSION PHP INSTALADA: " && php -version && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \

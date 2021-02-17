@@ -36,7 +36,7 @@ sed -i -e "s/^;openssl.cafile=/openssl.cafile='\/etc\/opt\/remi\/$PHP_VERSION\/c
 sed -i -e "s/^LoadModule mpm_event_module/#LoadModule mpm_event_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
 sed -i -e "s/^#LoadModule mpm_prefork_module/LoadModule mpm_prefork_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
 sed -i -e "s/^LoadModule mpm_worker_module/#LoadModule mpm_worker_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
-curl -o /etc/opt/remi/$PHP_VERSION/cacert.pem https://curl.haxx.se/ca/cacert.pem  
+curl -o /etc/opt/remi/$PHP_VERSION/cacert.pem https://curl.se/ca/cacert.pem 
 
 ENV HOME=/usr/share/httpd \
 PATH=/opt/remi/$PHP_VERSION/root/usr/bin:/opt/remi/$PHP_VERSION/root/usr/sbin${PATH:+:${PATH}} \
