@@ -71,5 +71,18 @@ if [ "$MIGRATIONS" == 1 ]; then
 	echo "---->  INICIANDO APP..."
 	echo "···································································································"
 
+OS=$(awk -F= '$1=="NAME" { print $2 ;}' /etc/os-release | sed -e 's/^"//' -e 's/"$//')
+
+
+
+if [ "$OS" == "Ubuntu" ]; then
+rm -rf /var/run/apache2/*
+source /etc/apache2/envvars
+exec apache2 -DFOREGROUND
+fi
+
+if [ "$OS" == "CentOS Linux" ]; then
 rm -rf /var/run/httpd/*
 exec httpd -DFOREGROUND
+fi
+

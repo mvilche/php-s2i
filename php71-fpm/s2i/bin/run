@@ -67,8 +67,26 @@ if [ "$MIGRATIONS" == 1 ]; then
     echo "----> CONTINUANDO SIN MIGRACIONES"
 	fi
 
+	if [[ -d $DOCROOT/public ]]; then
+	sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' $APACHE_CONFIGDIR/conf.d/custom.conf
+	fi
+	
+		if [[ ! -z $PHP_MEMORY_LIMIT ]]; then
+		echo "----> SET PHP MEMORY LIMIT TO $PHP_MEMORY_LIMIT"
+		sed -i -e "s/memory_limit.*/memory_limit = $PHP_MEMORY_LIMIT/g" /etc/opt/remi/$PHP_VERSION/php.ini
+		fi
+
 	echo "···································································································"
 	echo "---->  INICIANDO APP..."
 	echo "···································································································"
 
-exec php-fpm -F -O 
+	httpd -DFOREGROUND &>>/dev/stdout &
+	ps1=$!
+	php-fpm -F -O  &>>/dev/stdout &
+	ps2=$!
+	while true
+	do
+	kill -0 $ps1 &>/dev/null
+	kill -0 $ps2 &>/dev/null
+	sleep 5
+	done
