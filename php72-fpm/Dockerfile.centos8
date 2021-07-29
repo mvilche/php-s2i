@@ -20,7 +20,7 @@ LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
 
 RUN echo "LANG=$LANG" > /etc/locale.conf && \
 yum install glibc-langpack-en glibc-langpack-es glibc-all-langpacks -y && yum update -y && yum install $EPEL yum-utils -y && yum install $REMI -y && \
-yum --enablerepo=remi install nodejs git $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-tidy $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
+yum --enablerepo=remi install nodejs nodejs-full-i18n git $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-tidy $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
 $PHP_VERSION-php-common $PHP_VERSION-php-intl $PHP_VERSION-php-mysqlnd $PHP_VERSION-php-pgsql $PHP_VERSION-php-process $PHP_VERSION-php-geos $PHP_VERSION-php-pecl-geoip $PHP_VERSION-php-mbstring $PHP_VERSION-php-pecl-zip $PHP_VERSION-php-gd $PHP_VERSION-php-ldap \
 $PHP_VERSION-php-bcmath $PHP_VERSION-php-mcrypt httpd openssl unzip curl nc which -y
 
