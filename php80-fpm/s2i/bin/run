@@ -1,0 +1,92 @@
+#!/bin/bash -e
+#
+# S2I run script for the 'springboot-sti' image.
+# The run script executes the server that runs your application.
+#
+# For more information see the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+
+if [ -z "$TIMEZONE" ]; then
+	echo "···································································································"
+	echo "---->  VARIABLE TIMEZONE NO SETEADA - INICIANDO CON VALORES POR DEFECTO"
+	echo "---->  POSIBLES VALORES: America/Montevideo | America/El_Salvador"
+	echo "···································································································"
+else
+	echo "···································································································"
+	echo "---->  TIMEZONE SETEADO ENCONTRADO: " $TIMEZONE
+	echo "···································································································"
+	cat /usr/share/zoneinfo/$TIMEZONE > /etc/localtime && \
+	echo $TIMEZONE > /etc/timezone
+fi
+
+
+
+if [ ! -z "$WAITFOR_HOST" ] && [ ! -z "$WAITFOR_PORT" ] ; then
+	echo "···································································································"
+	echo "---->  WAITFOR  ACTIVADO.."
+    until nc -z -v -w5 $WAITFOR_HOST $WAITFOR_PORT &> /dev/null; do echo waiting for $WAITFOR_HOST; sleep 10; done;	
+	echo "···································································································"
+fi
+
+
+DOCROOT=/var/www/html
+
+if [ -f "/opt/composer_env/env" ]; then
+
+echo "----> CUSTOM ENV ENCONTRADO - UTILIZANDO.."
+
+cat /opt/composer_env/env > $DOCROOT/.env
+
+fi
+
+
+
+if [ "$MIGRATIONS" == 1 ]; then
+	echo "···································································································"
+	echo "----> MIGRACIONES AUTOMATICAS ACTIVADAS.."
+	
+	if [[ -f "$DOCROOT/artisan" ]]; then
+    
+	echo "----> ARTISAN ENCONTRADO!"
+    echo "----> EJECUTANDO MIGRACIONES..."
+	cd $DOCROOT
+	if [ ! -z "$ARTISAN_COMMAND_OVERRIDE" ]; then
+
+	echo "----> ARTISAN_COMMAND_OVERRIDE ENCONTRADO..."
+	$ARTISAN_COMMAND_OVERRIDE
+	else
+	php artisan key:generate --force 
+	php artisan migrate --force
+	fi
+	else
+	echo "----> NO SE ENCONTRO ARTISAN - NADA PARA MIGRAR"
+	fi
+	else
+    echo "----> CONTINUANDO SIN MIGRACIONES"
+	fi
+
+	if [[ -d $DOCROOT/public ]]; then
+	sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' $APACHE_CONFIGDIR/conf.d/custom.conf
+	fi
+	
+		if [[ ! -z $PHP_MEMORY_LIMIT ]]; then
+		echo "----> SET PHP MEMORY LIMIT TO $PHP_MEMORY_LIMIT"
+		sed -i -e "s/memory_limit.*/memory_limit = $PHP_MEMORY_LIMIT/g" /etc/opt/remi/$PHP_VERSION/php.ini
+		fi
+
+	echo "···································································································"
+	echo "---->  INICIANDO APP..."
+	echo "···································································································"
+
+	httpd -DFOREGROUND &>>/dev/stdout &
+	ps1=$!
+	php-fpm -F -O  &>>/dev/stdout &
+	ps2=$!
+	while true
+	do
+	kill -0 $ps1 &>/dev/null
+	kill -0 $ps2 &>/dev/null
+	sleep 5
+	done
