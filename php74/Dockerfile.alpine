@@ -51,7 +51,6 @@ $PHP_VERSION-embed \
 $PHP_VERSION-xmlreader \
 $PHP_VERSION-pdo_sqlite \
 $PHP_VERSION-exif \
-$PHP_VERSION-recode \
 $PHP_VERSION-opcache \
 $PHP_VERSION-ldap \
 $PHP_VERSION-posix \
@@ -77,7 +76,6 @@ $PHP_VERSION-apache2 \
 $PHP_VERSION-cgi \
 $PHP_VERSION-ctype \
 $PHP_VERSION-pecl-mcrypt \
-$PHP_VERSION-wddx \
 $PHP_VERSION-bcmath \
 $PHP_VERSION-calendar \
 $PHP_VERSION-tidy \
