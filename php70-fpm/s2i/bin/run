@@ -68,7 +68,7 @@ if [ "$MIGRATIONS" == 1 ]; then
 	fi
 
 	if [[ -d $DOCROOT/public ]]; then
-	sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' $APACHE_CONFIGDIR/conf.d/custom.conf
+	sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' $APACHE_CONFIGDIR/conf.d/security.conf
 	fi
 	
 		if [[ ! -z $PHP_MEMORY_LIMIT ]]; then
