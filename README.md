@@ -31,8 +31,6 @@
 
 ### Build Environments 
 
-! Sonarqube only include in CentOS Images
-
 | Environment | Details |
 | ------ | ------ |
 | NEXUS_COMPOSER_REPO | Url private composer repository  |
