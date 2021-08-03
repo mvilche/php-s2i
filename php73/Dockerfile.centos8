@@ -46,12 +46,9 @@ MANPATH=/opt/remi/$PHP_VERSION/root/usr/share/man:${MANPATH}
 
 RUN echo "VERSION PHP INSTALADA: " && php -version && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=$COMPOSER_VERSION && rm composer-setup.php && \
-yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum &> /dev/null 
+yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum /var/cache/dnf &> /dev/null 
 
 WORKDIR /opt
-
-#RUN curl https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.2.0.1873-linux.zip -o sonar.zip && \
-#unzip -o sonar.zip &> /dev/null && rm -rf sonar.zip && mv sonar-scanner* sonar 
 
 COPY s2i/bin/ /usr/libexec/s2i
 

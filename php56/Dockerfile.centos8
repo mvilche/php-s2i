@@ -46,7 +46,7 @@ MANPATH=/opt/remi/$PHP_VERSION/root/usr/share/man:${MANPATH}
 
 RUN echo "VERSION PHP INSTALADA: " && php -version && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=$COMPOSER_VERSION && rm composer-setup.php && \
-yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum &> /dev/null
+yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum /var/cache/dnf &> /dev/null
 
 WORKDIR /opt
 
