@@ -54,6 +54,8 @@ WORKDIR /var/www/html
 
 COPY s2i/bin/ /usr/libexec/s2i
 COPY security.conf /etc/httpd/conf.d/security.conf
+COPY info.php /var/www/html/index.php
+
 
 RUN mkdir -p /opt/composer_env /var/www/html/storage/.noDelete && usermod -u 1001 apache && usermod -aG 0 apache && rm -rf /etc/localtime /etc/httpd/conf.d/welcome.conf && touch /etc/localtime /etc/timezone && \
 mkdir -p /usr/share/composer_install && \

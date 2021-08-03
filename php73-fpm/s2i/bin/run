@@ -79,10 +79,20 @@ if [ "$MIGRATIONS" == 1 ]; then
 	echo "···································································································"
 	echo "---->  INICIANDO APP..."
 	echo "···································································································"
-
+	
+	distro=$(awk -F= '$1=="ID" { print $2 ;}' /etc/os-release)
+	
 	httpd -DFOREGROUND &>>/dev/stdout &
 	ps1=$!
-	php-fpm -F -O  &>>/dev/stdout &
+
+	if [[ "$distro" == "alpine" ]]; then
+		find_php=$(ls /usr/sbin/php-fpm* | tail -n1)
+	
+	else
+	find_php=$(whereis php-fpm | awk '{print $2}')
+	fi
+
+	$find_php -F -O  &>>/dev/stdout &
 	ps2=$!
 	while true
 	do
