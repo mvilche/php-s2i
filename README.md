@@ -9,7 +9,7 @@
 # Features
 
 - Non-root
-- Openshift ready!
+- Okd ready!
 - S2i build images
 - Composer
 - Artisan Migrations
@@ -27,6 +27,7 @@
 | WAITFOR_PORT | set port for WAITFOR_HOST |
 | MIGRATIONS | Enable artisan migrations. 1/0 |
 | ARTISAN_COMMAND_OVERRIDE | Override artisan command execute when migration is enabled |
+| PHP_MEMORY_LIMIT | Set memory limit in PHP (Example: 512M) - Only in fpm images |
 
 
 ### Build Environments 
@@ -34,7 +35,7 @@
 | Environment | Details |
 | ------ | ------ |
 | NEXUS_COMPOSER_REPO | Url private composer repository  |
-
+| EXTRA_COMPOSER_COMMAND | Run extra composer command after install dependencies process |
 
 
 
