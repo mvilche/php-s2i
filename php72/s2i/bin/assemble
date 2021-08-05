@@ -12,33 +12,6 @@ shopt -u dotglob
 DOCROOT="/var/www/html"
 SHARE="/usr/share/httpd"
 export COMPOSER_MEMORY_LIMIT=-1
-export JAVA_OPTS="-XX:-UseContainerSupport -Dfile.encoding=UTF8 -XX:+ExitOnOutOfMemoryError"
-
-
-function sonarqube() {
-
-
-if [[ "$SONARQUBE_ENABLED" == 1 ]]; then
-echo "----> SONARQUBE ACTIVADO."
-echo "----> VALIDANDO DATOS DE CONEXION.."
-
-if [[ -z "$SONARQUBE_HOST" ]] || [[ -z "$SONARQUBE_PROJECTKEY" ]] || [[ -z "$SONARQUBE_PROJECTNAME" ]]; then
-
-echo "----> ERROR NO SE ENCONTRARON LAS VARIABLES REQUERIDAS."
-echo "----> VERIFIQUE SONARQUBE_HOST, SONARQUBE_PROJECTNAME, SONARQUBE_PROJECTKEY."
-exit 1
-fi
-cd $DOCROOT && \
-/opt/sonar/bin/sonar-scanner -Dsonar.projectKey=$SONARQUBE_PROJECTKEY -Dsonar.projectName=$SONARQUBE_PROJECTNAME \
--Dsonar.exclusions=vendor/** -Dsonar.sources=$DOCROOT -Dsonar.host.url=$SONARQUBE_HOST -Dsonar.scm.enabled=false
-echo "----> SONARQUBE ANALISIS FINALIZADO!."
-else 
-echo "----> SONARQUBE DESACTIVADO."
-fi
-
-
-}
-
 
 
 if [[ "$1" == "-h" ]]; then
@@ -49,17 +22,19 @@ fi
   if [ -d /tmp/artifacts/vendor ]; then
   echo "---> RESTAURANDO VENDOR DESDE CACHE..."
   cp -rf /tmp/artifacts/vendor $DOCROOT/vendor
-  rm -rf /tmp/artifacts
+  rm -rf /tmp/artifacts/vendor
+  fi
 
-fi
+  if [ -d /tmp/artifacts/node_modules ]; then
+  echo "---> RESTAURANDO NODE_MODULES DESDE CACHE..."
+  cp -rf /tmp/artifacts/node_modules $DOCROOT/node_modules
+  rm -rf /tmp/artifacts/node_modules
+  fi
 
 echo "---> INSTALANDO CODIGO FUENTE..."
 cp -rf /tmp/src/.  $DOCROOT/
 rm -rf /tmp/src
 
-#### sonarqube function
-#sonarqube
-#####
 
 if [[ -f "$DOCROOT/composer.json" ]]; then
 echo "----> COMPOSER ENCONTRADO!"
@@ -69,6 +44,7 @@ mkdir -p $SHARE/.composer
 echo "{}" > $SHARE/.composer/composer.json
 
 
+
 if [[ ! -z $NEXUS_COMPOSER_REPO ]]; then
 echo "----> NEXUS_COMPOSER_REPO ENCONTRADO!"
 composer config -g secure-http false
@@ -76,28 +52,24 @@ composer config repositories.custom '{"type": "composer", "url": "nexus_custom_r
 sed -i "s@nexus_custom_repo@$NEXUS_COMPOSER_REPO@" composer.json
 composer config -g repo.packagist false
 fi
+
+
 composer install -vvv --no-scripts -d $DOCROOT
-$EXTRA_COMPOSER_COMMAND
+
+if [[ ! -z $EXTRA_COMPOSER_COMMAND ]]; then
+echo "----> EXTRA_COMPOSER_COMMAND ENCONTRADO - EJECUTANDO..."
+echo "$EXTRA_COMPOSER_COMMAND"
+
+eval "$EXTRA_COMPOSER_COMMAND"
+
+fi
 echo "----> FIN INSTALACION COMPOSER..."
 fi
 
 #######################################
+
 echo "----> COMPLETANDO TAREAS ADICIONALES..."
 
-if [[ -d $DOCROOT/public ]]; then
-echo "----> SE ENCONTRO DIRECTORIO PUBLIC."
-echo "----> DEFINIENDO COMO DOCUMENTROOT.."
-sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' $APACHE_CONFIGDIR/conf.d/security.conf
-fi
-
-
-if [ $(find $DOCROOT/ -iname '.env*' | wc -l) -gt 0 ]; then
-echo "----> SE ENCONTRARON ARCHIVOS .env* EN LAS FUENTES - ELIMINANDO POR MOTIVOS DE SEGURIDAD..."
-echo "----> --------------------------------------------------------------------------------------------------"
-echo "----> NUNCA INCLUYA ARCHIVOS DE CONFIGURACION, CERTIFICADOS, O DATASOURCES ESPECIFICOS PARA CADA AMBIENTE DENTRO DE LAS IMAGENES..."
-echo "----> --------------------------------------------------------------------------------------------------"
-find $DOCROOT -iname '.env*' -exec rm -rf {} \;
-fi
 #######################################
 echo "START FIX PERMISSIONS..."
 /usr/libexec/s2i/fix $SHARE
