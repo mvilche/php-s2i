@@ -14,6 +14,7 @@
 - Composer
 - Artisan Migrations
 - Composer nexus private repository
+- Composer Version 1.10.16
 
 
 ### Deploy Environments
