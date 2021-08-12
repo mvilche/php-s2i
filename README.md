@@ -15,6 +15,8 @@
 - Artisan Migrations
 - Composer nexus private repository
 - Composer Version 1.10.16
+- Php-fpm + Apache Images
+- Apache + Mod_php Images
 
 
 ### Deploy Environments
@@ -28,7 +30,10 @@
 | WAITFOR_PORT | set port for WAITFOR_HOST |
 | MIGRATIONS | Enable artisan migrations. 1/0 |
 | ARTISAN_COMMAND_OVERRIDE | Override artisan command execute when migration is enabled |
-| PHP_MEMORY_LIMIT | Set memory limit in PHP (Example: 512M) - Only in fpm images |
+| PHP_MEMORY_LIMIT | Set memory limit in PHP (Example: 512M) - Default value -1(no limit) - Only in fpm images |
+| FPM_MAX_CHILDREN | Set max concurrent clients fpm (Example: 250) - Default value 50 - Only in fpm images |
+| MAX_REQUEST_WORKER | Set max concurrent clients in Apache (Example: 500) - Default value 250 - Only in fpm images |
+| SERVER_LIMIT | Set number server limit in Apache (Example: 20) - Default value 16 - Only in fpm images |
 
 
 ### Build Environments 
