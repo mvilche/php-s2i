@@ -104,12 +104,17 @@ sed -i -e "s/^LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/" /et
 sed -i -e "s/^LoadModule mpm_worker_module/#LoadModule mpm_worker_module/" /etc/apache2/httpd.conf && \
 sed -i -e "s/^;curl.cainfo =/curl.cainfo='\/etc\/apache2\/ca\/cacert.pem'/" /etc/$PHP_VERSION/php.ini && \
 sed -i -e "s/^;openssl.cafile=/openssl.cafile='\/etc\/apache2\/ca\/cacert.pem'/" /etc/$PHP_VERSION/php.ini && \
+sed -i -e "s/memory_limit.*/memory_limit = -1/g" /etc/$PHP_VERSION/php.ini && \
+sed -i -e "s/^short_open_tag = Off/short_open_tag = On/" /etc/$PHP_VERSION/php.ini && \
+sed -i -e "s/^post_max_size = 8M/post_max_size = 80M/" /etc/$PHP_VERSION/php.ini && \
+sed -i -e "s/^upload_max_filesize = 2M/upload_max_filesize = 40M/" /etc/$PHP_VERSION/php.ini && \
+sed -i -e "s/^LogLevel warn/LogLevel Error/" /etc/$PHP_VERSION/php.ini && \
 mkdir -p /etc/apache2/ca && curl -o /etc/apache2/ca/cacert.pem https://curl.se/ca/cacert.pem  
 
-RUN ln -sf /usr/bin/$PHP_VERSION /usr/bin/php && \
-echo "VERSION PHP INSTALADA: " && php -version && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+RUN mkdir -p /php-fpm && ln -sf /usr/bin/$PHP_VERSION /usr/bin/php && \
+echo "VERSION PHP INSTALLED: " && php -version && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=$COMPOSER_VERSION && rm composer-setup.php && \
-rm -rf /var/www/localhost/htdocs/* && mkdir -p /run/apache2 && rm -rf /var/cache/apk/* /etc/localtime
+rm -rf /var/www/localhost/htdocs/* && mkdir -p /run/apache2 && rm -rf /var/cache/apk/* /etc/localtime /etc/apache2/conf.d/mpm.conf
 
 COPY s2i/bin/ /usr/libexec/s2i
 
@@ -117,22 +122,22 @@ COPY security.conf /etc/apache2/conf.d/security.conf
 
 COPY info.php /var/www/html/index.php
 
-COPY 99-custom_overrides.ini /etc/$PHP_VERSION/conf.d/99-custom_overrides.ini
+COPY www.conf /php-fpm/www.conf
 
-RUN sed -i -e '$a#########php fpm config' /etc/apache2/conf.d/security.conf && \
-sed -i -e '$aProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/var/www/html/$1' /etc/apache2/conf.d/security.conf && \
-sed -i -e '$aDirectoryIndex index.php' /etc/apache2/conf.d/security.conf && \
-sed -i -e '$a########## php fpm config' /etc/apache2/conf.d/security.conf && \
-mkdir -p /opt/composer_env /var/www/html /usr/share/composer_install /usr/share/httpd /var/log/$PHP_VERSION && usermod -u 1001 apache && usermod -aG 0 apache && touch /etc/localtime /etc/timezone && \
-chown -R 1001 /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chgrp -R 0 /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /usr/share/httpd /var/log/apache2 /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod -R g=u /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
+
+RUN mkdir -p /opt/composer_env /var/www/html /usr/share/composer_install /usr/share/httpd /var/log/$PHP_VERSION && usermod -u 1001 apache && usermod -aG 0 apache && touch /etc/localtime /etc/timezone && \
+chown -R 1001 /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chgrp -R 0 /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /usr/share/httpd /var/log/apache2 /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chmod -R g=u /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chmod +x /usr/libexec/s2i/*
 
 WORKDIR /var/www/html
 
 ENV HOME=/usr/share/httpd \
-APACHE_CONFIGDIR=/etc/apache2
+APACHE_CONFIGDIR=/etc/apache2 \
+FPM_MAX_CHILDREN=50 \
+MAX_REQUEST_WORKER=250 \
+SERVER_LIMIT=16
 
 USER 1001:0
 

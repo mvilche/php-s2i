@@ -98,6 +98,14 @@
                     value: '0'
                   - name: ARTISAN_COMMAND_OVERRIDE
                     value:
+                  - name: PHP_MEMORY_LIMIT
+                    value: '-1'
+                  - name: FPM_MAX_CHILDREN
+                    value: '50'
+                  - name: MAX_REQUEST_WORKER
+                    value: '250'
+                  - name: SERVER_LIMIT
+                    value: '16'                                                                                
                 image: "${APP_NAME}-${PHP_VERSION}:latest"
                 imagePullPolicy: Always
                 name: ${APP_NAME}
@@ -211,14 +219,6 @@
         strategy:
           sourceStrategy:
             env:
-              # - name: SONARQUBE_ENABLED
-              #   value: ${SONARQUBE_ENABLED}
-              # - name: SONARQUBE_HOST
-              #   value: ${SONARQUBE_HOST}
-              # - name: SONARQUBE_PROJECTKEY
-              #   value: ${SONARQUBE_PROJECTKEY}
-              # - name: SONARQUBE_PROJECTNAME
-              #   value: ${SONARQUBE_PROJECTNAME}
               - name: NEXUS_COMPOSER_REPO
                 value: ${NEXUS_COMPOSER_REPO}
             incremental: true

@@ -20,25 +20,25 @@ fi
 
 
   if [ -d /tmp/artifacts/vendor ]; then
-  echo "---> RESTAURANDO VENDOR DESDE CACHE..."
+  echo "---> RESTORING VENDOR FROM CACHE..."
   cp -rf /tmp/artifacts/vendor $DOCROOT/vendor
   rm -rf /tmp/artifacts/vendor
   fi
 
   if [ -d /tmp/artifacts/node_modules ]; then
-  echo "---> RESTAURANDO NODE_MODULES DESDE CACHE..."
+  echo "---> RESTORING NODE_MODULES FROM CACHE..."
   cp -rf /tmp/artifacts/node_modules $DOCROOT/node_modules
   rm -rf /tmp/artifacts/node_modules
   fi
 
-echo "---> INSTALANDO CODIGO FUENTE..."
+echo "---> INSTALL SOURCE CODE..."
 cp -rf /tmp/src/.  $DOCROOT/
 rm -rf /tmp/src
 
 
 if [[ -f "$DOCROOT/composer.json" ]]; then
-echo "----> COMPOSER ENCONTRADO!"
-echo "----> INSTALANDO..."
+echo "----> COMPOSER FOUND!"
+echo "----> INSTALL DEPENDENCIES..."
 cd $DOCROOT	
 mkdir -p $SHARE/.composer
 echo "{}" > $SHARE/.composer/composer.json
@@ -46,7 +46,7 @@ echo "{}" > $SHARE/.composer/composer.json
 
 
 if [[ ! -z $NEXUS_COMPOSER_REPO ]]; then
-echo "----> NEXUS_COMPOSER_REPO ENCONTRADO!"
+echo "----> NEXUS_COMPOSER_REPO FOUND!"
 composer config -g secure-http false
 composer config repositories.custom '{"type": "composer", "url": "nexus_custom_repo", "secure-http": "false"}'
 sed -i "s@nexus_custom_repo@$NEXUS_COMPOSER_REPO@" composer.json
@@ -57,22 +57,22 @@ fi
 composer install -vvv --no-scripts -d $DOCROOT
 
 if [[ ! -z $EXTRA_COMPOSER_COMMAND ]]; then
-echo "----> EXTRA_COMPOSER_COMMAND ENCONTRADO - EJECUTANDO..."
+echo "----> EXTRA_COMPOSER_COMMAND FOUND - RUNNING..."
 echo "$EXTRA_COMPOSER_COMMAND"
 
 eval "$EXTRA_COMPOSER_COMMAND"
 
 fi
-echo "----> FIN INSTALACION COMPOSER..."
+echo "----> END INSTALL COMPOSER..."
 fi
 
 #######################################
 
-echo "----> COMPLETANDO TAREAS ADICIONALES..."
+echo "----> FINISH ADITTIONAL TASKS..."
 
 #######################################
-echo "START FIX PERMISSIONS..."
+echo "----> START FIX PERMISSIONS..."
 /usr/libexec/s2i/fix $SHARE
 /usr/libexec/s2i/fix $DOCROOT
-echo "FIX PERMISSIONS END"
-echo "----> INSTALACION FINALIZADA"
+echo "----> FIX PERMISSIONS END"
+echo "----> INSTALL FINISH OK"

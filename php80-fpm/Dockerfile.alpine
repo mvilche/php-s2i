@@ -124,10 +124,7 @@ COPY info.php /var/www/html/index.php
 
 COPY www.conf /php-fpm/www.conf
 
-#sed -i -e '$a#########php fpm config' /etc/apache2/conf.d/security.conf && \
-#sed -i -e '$aProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/var/www/html/$1' /etc/apache2/conf.d/security.conf && \
-#sed -i -e '$aDirectoryIndex index.php' /etc/apache2/conf.d/security.conf && \
-#sed -i -e '$a########## php fpm config' /etc/apache2/conf.d/security.conf && \
+
 RUN mkdir -p /opt/composer_env /var/www/html /usr/share/composer_install /usr/share/httpd /var/log/$PHP_VERSION && usermod -u 1001 apache && usermod -aG 0 apache && touch /etc/localtime /etc/timezone && \
 chown -R 1001 /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chgrp -R 0 /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /usr/share/httpd /var/log/apache2 /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
