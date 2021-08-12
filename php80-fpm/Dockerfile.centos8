@@ -31,7 +31,7 @@ sed -i -e "s/^short_open_tag = Off/short_open_tag = On/" /etc/opt/remi/$PHP_VERS
 sed -i -e "s/^post_max_size = 8M/post_max_size = 80M/" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i -e "s/^upload_max_filesize = 2M/upload_max_filesize = 40M/" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i -e "s/^LogLevel warn/LogLevel Error/" /etc/opt/remi/$PHP_VERSION/php.ini && \
-sed -i -e "s/memory_limit.*/memory_limit = -1/g" /etc/opt/remi/$PHP_VERSION/php.ini \
+sed -i -e "s/memory_limit.*/memory_limit = -1/g" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i "/;session.save_path/c\session.save_path=\/tmp" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i -e "s/^#LoadModule mpm_event_module/LoadModule mpm_event_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
 sed -i -e "s/^LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
@@ -61,7 +61,7 @@ WORKDIR /var/www/html
 COPY s2i/bin/ /usr/libexec/s2i
 COPY security.conf /etc/httpd/conf.d/security.conf
 COPY info.php /var/www/html/index.php
-COPY www.conf /fpm-config/www.conf
+COPY www.conf /php-fpm/www.conf
 
 RUN mkdir -p /opt/composer_env /var/www/html/storage/.noDelete && usermod -u 1001 apache && usermod -aG 0 apache && rm -rf /etc/httpd/conf.d/$PHP_VERSION-php.conf /etc/localtime /etc/httpd/conf.d/welcome.conf && touch /etc/localtime /etc/timezone && \
 mkdir -p /usr/share/composer_install && \

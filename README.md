@@ -11,7 +11,7 @@
 - Non-root
 - Okd ready!
 - S2i build images
-- Composer
+- Composer and npm
 - Artisan Migrations
 - Composer nexus private repository
 - Composer Version 1.10.16
