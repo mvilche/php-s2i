@@ -10,11 +10,11 @@
 
 pushd /var/www/html >/dev/null
 if [ -d vendor ]; then
+    if [ -d node_modules ]; then
+    tar cf - vendor node_modules
+    else
     tar cf - vendor
-fi
-
-if [ -d node_modules ]; then
-    tar cf - node_modules
+    fi
 fi
 popd >/dev/null
 
