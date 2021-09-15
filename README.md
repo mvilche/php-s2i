@@ -37,10 +37,14 @@
 
 
 ##### Apache images tuning
+| Environment | Details |
+| ------ | ------ |
 | MAX_REQUEST_WORKER | Set max concurrent clients in Apache (Example: 500) - Default value 250 - Only in fpm images |
 | SERVER_LIMIT | Set number server limit in Apache (Example: 20) - Default value 16 - Only in fpm images |
 
 ##### Nginx images tuning
+| Environment | Details |
+| ------ | ------ |
 | NGINX_WORKER_CONNECTION | Set max concurrent clients in Nginx (Example: 500) - Default value 1024 - Only in fpm images |
 | NGINX_WORKER_PROCESSES | Set number process in Nginx (Example: 20) - Default value 1 - Only in fpm images |
 
