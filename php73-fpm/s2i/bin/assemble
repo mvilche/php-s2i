@@ -10,7 +10,6 @@
 set -e
 shopt -u dotglob
 DOCROOT="/var/www/html"
-SHARE="/usr/share/httpd"
 export COMPOSER_MEMORY_LIMIT=-1
 
 
@@ -40,8 +39,8 @@ if [[ -f "$DOCROOT/composer.json" ]]; then
 echo "----> COMPOSER FOUND!"
 echo "----> INSTALL DEPENDENCIES..."
 cd $DOCROOT	
-mkdir -p $SHARE/.composer
-echo "{}" > $SHARE/.composer/composer.json
+mkdir -p $HOME/.composer
+echo "{}" > $HOME/.composer/composer.json
 
 
 
@@ -72,7 +71,7 @@ echo "----> FINISH ADITTIONAL TASKS..."
 
 #######################################
 echo "----> START FIX PERMISSIONS..."
-/usr/libexec/s2i/fix $SHARE
+/usr/libexec/s2i/fix $HOME
 /usr/libexec/s2i/fix $DOCROOT
 echo "----> FIX PERMISSIONS END"
 echo "----> INSTALL FINISH OK"
