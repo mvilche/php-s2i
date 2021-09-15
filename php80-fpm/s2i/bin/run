@@ -69,7 +69,12 @@ if [ "$MIGRATIONS" == 1 ]; then
 	fi
 
 	if [[ -d $DOCROOT/public ]]; then
+	if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
 	sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' $APACHE_CONFIGDIR/conf.d/security.conf
+	fi
+	if [[ -d "/etc/nginx" ]]; then
+	sed -i -e 's/root           \/var\/www\/html;/root           \/var\/www\/html;/g' /etc/nginx/http.d/default.conf
+	fi
 	fi
 	
 		if [[ ! -z $PHP_MEMORY_LIMIT ]]; then
@@ -82,20 +87,39 @@ if [ "$MIGRATIONS" == 1 ]; then
         echo "---->  SET pm.max_children TO $FPM_MAX_CHILDREN"
         echo "···································································································"
 
+		if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
         echo "·······················APACHE CONFIG············································································"
         echo "---->  SET MaxRequestWorkers TO $MAX_REQUEST_WORKER"
 		echo "---->  SET ServerLimit TO $SERVER_LIMIT"
-        echo "···································································································"
+        echo "················································································································"
+	    fi
 
+
+		if [[ -d "/etc/nginx" ]]; then
+		sed -i -e "s/^worker_processes.*/worker_processes $NGINX_WORKER_PROCESSES;/" /etc/nginx/nginx.conf
+        sed -i -e "s/^worker_connections.*/worker_connections $NGINX_WORKER_CONNECTION;/" /etc/nginx/nginx.conf
+        echo "·······················NGINX CONFIG············································································"
+        echo "---->  SET worker_connections TO $NGINX_WORKER_CONNECTION"
+		echo "---->  SET worker_processes TO $NGINX_WORKER_PROCESSES"
+        echo "················································································································"
+	    fi
 
 	echo "···································································································"
 	echo "---->  STARTING APP..."
 	echo "···································································································"
 	
 	distro=$(awk -F= '$1=="ID" { print $2 ;}' /etc/os-release)
-	
+
+	if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
 	httpd -DFOREGROUND &>>/dev/stdout &
 	ps1=$!
+	fi
+	
+	if [[ -d "/etc/nginx" ]]; then
+	nginx -g 'daemon off;'&>>/dev/stdout &
+	ps1=$!
+	fi
+
 
 	if [[ "$distro" == "alpine" ]]; then
 		find_php=$(ls /usr/sbin/php-fpm* | tail -n1)

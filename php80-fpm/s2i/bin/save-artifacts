@@ -17,5 +17,3 @@ if [ -d vendor ]; then
     fi
 fi
 popd >/dev/null
-
-
