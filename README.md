@@ -9,13 +9,15 @@
 # Features
 
 - Non-root
-- Okd ready!
+- Okd Ready!
+- Kubernetes Ready!
 - S2i build images
 - Composer and npm
 - Artisan Migrations
 - Composer nexus private repository
 - Composer Version 1.10.16
 - Php-fpm + Apache Images
+- Php-fpm + Nginx Images
 - Apache + Mod_php Images
 
 
@@ -32,8 +34,15 @@
 | ARTISAN_COMMAND_OVERRIDE | Override artisan command execute when migration is enabled |
 | PHP_MEMORY_LIMIT | Set memory limit in PHP (Example: 512M) - Default value -1(no limit) - Only in fpm images |
 | FPM_MAX_CHILDREN | Set max concurrent clients fpm (Example: 250) - Default value 50 - Only in fpm images |
+
+
+##### Apache images tuning
 | MAX_REQUEST_WORKER | Set max concurrent clients in Apache (Example: 500) - Default value 250 - Only in fpm images |
 | SERVER_LIMIT | Set number server limit in Apache (Example: 20) - Default value 16 - Only in fpm images |
+
+##### Nginx images tuning
+| NGINX_WORKER_CONNECTION | Set max concurrent clients in Nginx (Example: 500) - Default value 1024 - Only in fpm images |
+| NGINX_WORKER_PROCESSES | Set number process in Nginx (Example: 20) - Default value 1 - Only in fpm images |
 
 
 ### Build Environments 
@@ -42,8 +51,6 @@
 | ------ | ------ |
 | NEXUS_COMPOSER_REPO | Url private composer repository  |
 | EXTRA_COMPOSER_COMMAND | Run extra composer command after install dependencies process |
-
-
 
 
 

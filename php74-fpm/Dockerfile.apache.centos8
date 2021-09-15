@@ -45,7 +45,7 @@ APACHE_CONFIGDIR=/etc/httpd \
 PATH=/opt/remi/$PHP_VERSION/root/usr/bin:/opt/remi/$PHP_VERSION/root/usr/sbin${PATH:+:${PATH}} \
 LD_LIBRARY_PATH=/opt/remi/$PHP_VERSION/root/usr/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} \
 MANPATH=/opt/remi/$PHP_VERSION/root/usr/share/man:${MANPATH} \
-FPM_MAX_CHILDREN=50 \
+FPM_MAX_CHILDREN=5 \
 MAX_REQUEST_WORKER=250 \
 SERVER_LIMIT=16
 
@@ -59,7 +59,7 @@ WORKDIR /var/www/html
 
 
 COPY s2i/bin/ /usr/libexec/s2i
-COPY security.conf /etc/httpd/conf.d/security.conf
+COPY apache-security.conf /etc/httpd/conf.d/security.conf
 COPY info.php /var/www/html/index.php
 COPY www.conf /php-fpm/www.conf
 

@@ -118,7 +118,7 @@ rm -rf /var/www/localhost/htdocs/* && mkdir -p /run/apache2 && rm -rf /var/cache
 
 COPY s2i/bin/ /usr/libexec/s2i
 
-COPY security.conf /etc/apache2/conf.d/security.conf
+COPY apache-security.conf /etc/apache2/conf.d/security.conf
 
 COPY info.php /var/www/html/index.php
 
@@ -135,7 +135,7 @@ WORKDIR /var/www/html
 
 ENV HOME=/usr/share/httpd \
 APACHE_CONFIGDIR=/etc/apache2 \
-FPM_MAX_CHILDREN=50 \
+FPM_MAX_CHILDREN=5 \
 MAX_REQUEST_WORKER=250 \
 SERVER_LIMIT=16
 
