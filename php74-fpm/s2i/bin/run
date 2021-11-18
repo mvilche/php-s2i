@@ -69,11 +69,12 @@ if [ "$MIGRATIONS" == 1 ]; then
 	fi
 
 	if [[ -d $DOCROOT/public ]]; then
+	echo "----> SETTING DOCROOT TO PUBLIC FOLDER..."
 	if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
 	sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' $APACHE_CONFIGDIR/conf.d/security.conf
 	fi
 	if [[ -d "/etc/nginx" ]]; then
-	sed -i -e 's/root           \/var\/www\/html;/root           \/var\/www\/html;/g' /etc/nginx/http.d/default.conf
+	sed -i -e 's/root           \/var\/www\/html;/root           \/var\/www\/html\/public;/g' /etc/nginx/http.d/default.conf
 	fi
 	fi
 	
