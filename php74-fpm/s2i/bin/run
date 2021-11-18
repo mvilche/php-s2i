@@ -99,9 +99,12 @@ if [ "$MIGRATIONS" == 1 ]; then
 		if [[ -d "/etc/nginx" ]]; then
 		sed -i -e "s/^worker_processes.*/worker_processes $NGINX_WORKER_PROCESSES;/" /etc/nginx/nginx.conf
         sed -i -e "s/^worker_connections.*/worker_connections $NGINX_WORKER_CONNECTION;/" /etc/nginx/nginx.conf
+		sed -i -e "s/^client_max_body_size.*/client_max_body_size $NGINX_CLIENT_MAX_BODY_SIZE;/" /etc/nginx/nginx.conf
+		
         echo "·······················NGINX CONFIG············································································"
         echo "---->  SET worker_connections TO $NGINX_WORKER_CONNECTION"
 		echo "---->  SET worker_processes TO $NGINX_WORKER_PROCESSES"
+		echo "---->  SET client_max_body_size TO $NGINX_CLIENT_MAX_BODY_SIZE"
         echo "················································································································"
 	    fi
 
