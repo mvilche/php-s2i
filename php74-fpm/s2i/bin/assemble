@@ -37,12 +37,10 @@ rm -rf /tmp/src
 
 if [[ -f "$DOCROOT/composer.json" ]]; then
 echo "----> COMPOSER FOUND!"
-echo "----> INSTALL DEPENDENCIES..."
+echo "----> INSTALLING DEPENDENCIES..."
 cd $DOCROOT	
 mkdir -p $HOME/.composer
 echo "{}" > $HOME/.composer/composer.json
-
-
 
 if [[ ! -z $NEXUS_COMPOSER_REPO ]]; then
 echo "----> NEXUS_COMPOSER_REPO FOUND!"
@@ -52,8 +50,14 @@ sed -i "s@nexus_custom_repo@$NEXUS_COMPOSER_REPO@" composer.json
 composer config -g repo.packagist false
 fi
 
-
+if [[ $COMPOSER_AUTOLOAD_OPTMIZATION == 1 ]]; then
+echo "----> COMPOSER_AUTOLOAD_OPTMIZATION FOUND!"
+composer install --optimize-autoloader --no-dev -vvv --no-scripts -d $DOCROOT
+else
+echo "----> COMPOSER_AUTOLOAD_OPTMIZATION NOT FOUND!"
+echo "----> CONTINUE WITHOUT COMPOSER_AUTOLOAD_OPTMIZATION"
 composer install -vvv --no-scripts -d $DOCROOT
+fi
 
 if [[ ! -z $EXTRA_COMPOSER_COMMAND ]]; then
 echo "----> EXTRA_COMPOSER_COMMAND FOUND - RUNNING..."

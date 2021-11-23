@@ -55,6 +55,8 @@
 | ------ | ------ |
 | NEXUS_COMPOSER_REPO | Url private composer repository  |
 | EXTRA_COMPOSER_COMMAND | Run extra composer command after install dependencies process |
+| COMPOSER_AUTOLOAD_OPTMIZATION | Run composer "composer install --optimize-autoloader --no-dev" in build process. 1(Enabled), 0(Disabled) - Default 0 |
+
 
 
 
