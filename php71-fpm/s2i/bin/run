@@ -69,11 +69,12 @@ if [ "$MIGRATIONS" == 1 ]; then
 	fi
 
 	if [[ -d $DOCROOT/public ]]; then
+	echo "----> SETTING DOCROOT TO PUBLIC FOLDER..."
 	if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
 	sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' $APACHE_CONFIGDIR/conf.d/security.conf
 	fi
 	if [[ -d "/etc/nginx" ]]; then
-	sed -i -e 's/root           \/var\/www\/html;/root           \/var\/www\/html;/g' /etc/nginx/http.d/default.conf
+	sed -i -e 's/root           \/var\/www\/html;/root           \/var\/www\/html\/public;/g' /etc/nginx/http.d/default.conf
 	fi
 	fi
 	
@@ -96,11 +97,14 @@ if [ "$MIGRATIONS" == 1 ]; then
 
 
 		if [[ -d "/etc/nginx" ]]; then
-		sed -i -e "s/^worker_processes.*/worker_processes $NGINX_WORKER_PROCESSES;/" /etc/nginx/nginx.conf
-        sed -i -e "s/^worker_connections.*/worker_connections $NGINX_WORKER_CONNECTION;/" /etc/nginx/nginx.conf
+		sed -i -e "s/worker_processes.*/worker_processes $NGINX_WORKER_PROCESSES;/" /etc/nginx/nginx.conf
+        sed -i -e "s/worker_connections.*/worker_connections $NGINX_WORKER_CONNECTION;/" /etc/nginx/nginx.conf
+		sed -i -e "s/client_max_body_size.*/client_max_body_size $NGINX_CLIENT_MAX_BODY_SIZE;/" /etc/nginx/nginx.conf
+		
         echo "·······················NGINX CONFIG············································································"
         echo "---->  SET worker_connections TO $NGINX_WORKER_CONNECTION"
 		echo "---->  SET worker_processes TO $NGINX_WORKER_PROCESSES"
+		echo "---->  SET client_max_body_size TO $NGINX_CLIENT_MAX_BODY_SIZE"
         echo "················································································································"
 	    fi
 
