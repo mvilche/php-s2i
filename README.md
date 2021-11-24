@@ -34,6 +34,8 @@
 | ARTISAN_COMMAND_OVERRIDE | Override artisan command execute when migration is enabled |
 | PHP_MEMORY_LIMIT | Set memory limit in PHP (Example: 512M) - Default value -1(no limit) - Only in fpm images |
 | FPM_MAX_CHILDREN | Set max concurrent clients fpm (Example: 250) - Default value 50 - Only in fpm images |
+| RUN_USER_ID | Start cointainer with specific userid - Only in fpm images |
+
 
 
 ##### Apache images tuning

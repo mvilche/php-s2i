@@ -22,6 +22,38 @@ else
 fi
 
 
+if [ ! -z "$RUN_USER_ID" ]; then
+	echo "···································································································"
+	echo "---->  RUN_USER_ID FOUND $RUN_USER_ID"
+
+	getuser=$(id -u)
+	if [ "$getuser" != 0 ]; then
+	echo "---->  !!!! ONLY WORK IF CONTAINER RUN WITH USER ROOT !!!!"
+	exit 1
+	fi	
+	echo "---->  CHANGE PERMISSIONS IN FILES!"
+	echo "···································································································"
+	if [[ -d "/etc/nginx" ]]; then
+	echo "---->  DETECTED NGINX IMAGE!"
+	usermod -u $RUN_USER_ID nginx 
+	#usermod -aG $RUN_USER_ID nginx
+	chown -R $RUN_USER_ID:$RUN_USER_ID /var/www/html
+	fi
+
+    if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
+	echo "---->  DETECTED APACHE IMAGE!"
+	usermod -u $RUN_USER_ID apache
+	#usermod -aG $RUN_USER_ID apache
+	chown -R $RUN_USER_ID:$RUN_USER_ID /var/www/html
+	fi
+
+	FPM_GROUP=$RUN_USER_ID
+    FPM_USER=$RUN_USER_ID
+
+	echo "----> FINISH RUN_USER_ID TASKS!"
+fi
+
+
 
 if [ ! -z "$WAITFOR_HOST" ] && [ ! -z "$WAITFOR_PORT" ] ; then
 	echo "···································································································"
