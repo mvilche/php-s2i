@@ -7,8 +7,12 @@ REMI=https://rpms.remirepo.net/enterprise/remi-release-8.rpm \
 LANG=es_ES.UTF-8 \
 LANGUAGE=es_ES.UTF-8 \
 LC_COLLATE=C \
-LC_CTYPE=es_ES.UTF-8
-
+LC_CTYPE=es_ES.UTF-8 \
+FPM_MAX_CHILDREN=50 \
+MAX_REQUEST_WORKER=250 \
+SERVER_LIMIT=16 \
+FPM_GROUP=apache \
+FPM_USER=apache
 
 LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
       io.k8s.description="php s2i images" \
