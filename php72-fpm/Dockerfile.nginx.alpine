@@ -81,9 +81,7 @@ $PHP_VERSION-tidy \
 $PHP_VERSION-dom \
 $PHP_VERSION-sockets \
 $PHP_VERSION-pecl-event \
-$PHP_VERSION-pecl-vips \
 $PHP_VERSION-pecl-memcached \
-$PHP_VERSION-brotli \
 $PHP_VERSION-soap \
 $PHP_VERSION-sysvmsg \
 $PHP_VERSION-ftp \
