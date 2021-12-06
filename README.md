@@ -19,6 +19,8 @@
 - Php-fpm + Apache Images
 - Php-fpm + Nginx Images
 - Apache + Mod_php Images
+- Nginx Prometheus metrics
+- Fpm Prometheus metrics
 
 
 ### Deploy Environments
@@ -35,7 +37,8 @@
 | PHP_MEMORY_LIMIT | Set memory limit in PHP (Example: 512M) - Default value -1(no limit) - Only in fpm images |
 | FPM_MAX_CHILDREN | Set max concurrent clients fpm (Example: 250) - Default value 50 - Only in fpm images |
 | RUN_USER_ID | Start cointainer with specific userid - Only in fpm images |
-
+| FPM_ENABLE_PROMETHEUS | Enable FPM Prometheus metrics  Values: 0 (Disable) - 1 (Enable) - Only in fpm images|
+| NGINX_ENABLE_PROMETHEUS | Enable NGINX Prometheus metrics  Values: 0 (Disable) - 1 (Enable) - Only in fpm images|
 
 
 ##### Apache images tuning
@@ -60,55 +63,13 @@
 | COMPOSER_AUTOLOAD_OPTMIZATION | Run composer "composer install --optimize-autoloader --no-dev" in build process. 1(Enabled), 0(Disabled) - Default 0 |
 
 
-
-
-### How use in Openshift
-
-```console
-
-oc process -f https://raw.githubusercontent.com/mvilche/php-s2i-openshift/master/php-s2i-template-openshift.yaml \ 
--p PHP_VERSION=php72 \
--p APP_NAME=miapp \ 
--p APP_REPO=https://github.com/myuser/php-composer-sample-app.git | oc create -f -
-
-```
-
-### Use configmap for database connection using composer env file
-
-```yaml
-
-apiVersion: v1
-data:
-  env: |-
-    APP_NAME=Lumen
-    APP_ENV=local
-    APP_KEY=
-    APP_DEBUG=true
-    APP_URL=http://miapp
-    APP_TIMEZONE=America/Montevideo
-    LOG_CHANNEL=stack
-    LOG_SLACK_WEBHOOK_URL=
-    DB_CONNECTION=mysql
-    DB_HOST=mysql
-    DB_PORT=3306
-    DB_DATABASE=database_name
-    DB_USERNAME=user
-    DB_PASSWORD=pass
-    CACHE_DRIVER=file
-    QUEUE_CONNECTION=sync
-kind: ConfigMap
-metadata:
-  name: composer-env
-
-```
-
-
-
 ### Generate builder image
 
 ```console
 
- docker build -t s2i-php:71 -f php71/Dockerfile.centos8 php71
+Example build php80 fpm nginx alpine
+
+ docker build -t s2i-php:80-fpm-nginx -f php80-fpm/Dockerfile.nginx.alpine contrib
 
 ```
 
@@ -134,14 +95,6 @@ docker run -p 8080:8080 myphp_app:latest
 ```console
 
 https://github.com/openshift/source-to-image
-
-```
-
-### How use without s2i
-
-```console
-
-docker run --name my_php -p 8080:8080 -d -v ./source:/var/www/html mvilche/php-s2i:73-alpine 
 
 ```
 

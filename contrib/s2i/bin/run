@@ -1,0 +1,206 @@
+#!/bin/bash -e
+#
+# S2I run script for the 'springboot-sti' image.
+# The run script executes the server that runs your application.
+#
+# For more information see the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+
+if [ -z "$TIMEZONE" ]; then
+	echo "···································································································"
+	echo "---->  TIMEZONE NOT FOUND"
+	echo "---->  EXAMPLE VALUES: America/Montevideo | America/El_Salvador"
+	echo "···································································································"
+else
+	echo "···································································································"
+	echo "---->  TIMEZONE FOUND SETTING TO: " $TIMEZONE
+	echo "···································································································"
+	cat /usr/share/zoneinfo/$TIMEZONE > /etc/localtime && \
+	echo $TIMEZONE > /etc/timezone
+fi
+
+
+if [ ! -z "$RUN_USER_ID" ]; then
+	echo "···································································································"
+	echo "---->  RUN_USER_ID FOUND $RUN_USER_ID"
+
+	getuser=$(id -u)
+	if [ "$getuser" != 0 ]; then
+	echo "---->  !!!! ONLY WORK IF CONTAINER RUN WITH USER ROOT !!!!"
+	exit 1
+	fi	
+	echo "---->  CHANGE PERMISSIONS IN FILES!"
+	echo "···································································································"
+	if [[ -d "/etc/nginx" ]]; then
+	echo "---->  DETECTED NGINX IMAGE!"
+	usermod -u $RUN_USER_ID nginx 
+	#usermod -aG $RUN_USER_ID nginx
+	chown -R $RUN_USER_ID:$RUN_USER_ID /var/www/html
+	fi
+
+    if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
+	echo "---->  DETECTED APACHE IMAGE!"
+	usermod -u $RUN_USER_ID apache
+	#usermod -aG $RUN_USER_ID apache
+	chown -R $RUN_USER_ID:$RUN_USER_ID /var/www/html
+	fi
+
+	FPM_GROUP=$RUN_USER_ID
+    FPM_USER=$RUN_USER_ID
+
+	echo "----> FINISH RUN_USER_ID TASKS!"
+fi
+
+
+
+if [ ! -z "$WAITFOR_HOST" ] && [ ! -z "$WAITFOR_PORT" ] ; then
+	echo "···································································································"
+	echo "---->  WAITFOR  ACTIVE.."
+    until nc -z -v -w5 $WAITFOR_HOST $WAITFOR_PORT &> /dev/null; do echo waiting for $WAITFOR_HOST; sleep 10; done;	
+	echo "···································································································"
+fi
+
+
+DOCROOT=/var/www/html
+PHP_INI=$(php -i | grep 'Configuration File' | awk '{ print $5 }' | tail -1)
+
+if [ -f "/opt/composer_env/env" ]; then
+
+echo "----> CUSTOM ENV FOUND"
+
+cat /opt/composer_env/env > $DOCROOT/.env
+
+fi
+
+
+
+if [ "$MIGRATIONS" == 1 ]; then
+	echo "···································································································"
+	echo "----> ENABLE AUTO MIGRATIONS.."
+	
+	if [[ -f "$DOCROOT/artisan" ]]; then
+    
+	echo "----> ARTISAN FOUND!"
+    echo "----> RUN ARTISAN MIGRATIONS..."
+	cd $DOCROOT
+	if [ ! -z "$ARTISAN_COMMAND_OVERRIDE" ]; then
+
+	echo "----> ARTISAN_COMMAND_OVERRIDE FOUND..."
+	$ARTISAN_COMMAND_OVERRIDE
+	else
+	php artisan key:generate --force 
+	php artisan migrate --force
+	fi
+	else
+	echo "----> ARTISAN NOT FOUND"
+	fi
+	else
+    echo "----> CONTINUE WITHOUT MIGRATIONS"
+	fi
+
+	if [[ -d $DOCROOT/public ]]; then
+	echo "----> SETTING DOCROOT TO PUBLIC FOLDER..."
+	if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
+	sed -i -e 's/DocumentRoot.*/DocumentRoot "\/var\/www\/html\/public"/g' $APACHE_CONFIGDIR/conf.d/security.conf
+	fi
+	if [[ -d "/etc/nginx" ]]; then
+	sed -i -e 's/root           \/var\/www\/html;/root           \/var\/www\/html\/public;/g' /etc/nginx/http.d/default.conf
+	fi
+	fi
+	
+		if [[ ! -z $PHP_MEMORY_LIMIT ]]; then
+		        echo "---->  PHP MEMORY LIMIT FOUND"
+		echo "----> SET PHP MEMORY LIMIT TO $PHP_MEMORY_LIMIT"
+		sed -i -e "s/memory_limit.*/memory_limit = $PHP_MEMORY_LIMIT/g" $PHP_INI
+		fi
+
+        echo "··························FPM CONFIG·········································································"
+        echo "---->  SET pm.max_children TO $FPM_MAX_CHILDREN"
+        echo "···································································································"
+
+		if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
+        echo "·······················APACHE CONFIG············································································"
+        echo "---->  SET MaxRequestWorkers TO $MAX_REQUEST_WORKER"
+		echo "---->  SET ServerLimit TO $SERVER_LIMIT"
+        echo "················································································································"
+	    fi
+
+
+		if [[ -d "/etc/nginx" ]]; then
+		sed -i -e "s/worker_processes.*/worker_processes $NGINX_WORKER_PROCESSES;/" /etc/nginx/nginx.conf
+        sed -i -e "s/worker_connections.*/worker_connections $NGINX_WORKER_CONNECTION;/" /etc/nginx/nginx.conf
+		sed -i -e "s/client_max_body_size.*/client_max_body_size $NGINX_CLIENT_MAX_BODY_SIZE;/" /etc/nginx/nginx.conf
+		
+        echo "·······················NGINX CONFIG············································································"
+        echo "---->  SET worker_connections TO $NGINX_WORKER_CONNECTION"
+		echo "---->  SET worker_processes TO $NGINX_WORKER_PROCESSES"
+		echo "---->  SET client_max_body_size TO $NGINX_CLIENT_MAX_BODY_SIZE"
+        echo "················································································································"
+	    fi
+
+
+	echo "···································································································"
+	echo "---->  STARTING APP..."
+	echo "···································································································"
+	
+	distro=$(awk -F= '$1=="ID" { print $2 ;}' /etc/os-release)
+
+	if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
+	echo "---->  DETECT APACHE IMAGE"
+	httpd -DFOREGROUND &>>/dev/stdout &
+	ps1=$!
+	fi
+	
+	if [[ -d "/etc/nginx" ]]; then
+
+	echo "---->  DETECT NGINX IMAGE"	
+	nginx -g 'daemon off;'&>>/dev/stdout &
+	ps1=$!
+
+	if [ "$NGINX_ENABLE_PROMETHEUS" == 1 ]; then
+	echo "···································································································"
+	echo "---->  NGINX_ENABLE_PROMETHEUS FOUND..."
+	echo "---->  ACTIVATING PROMETHEUS METRICS  :9113/metrics"
+	until nc -z -v -w5 127.0.0.1 8080 &> /dev/null; do sleep 5; done;	
+	/etc/nginx/nginx-prometheus-exporter -nginx.scrape-uri=http://127.0.0.1:8080/status &>>/dev/stdout &
+	psPrometheusNginx=$!
+	fi
+	else
+	echo "----> IGNORE NGINX_ENABLE_PROMETHEUS BECAUSE IS NOT NGINX IMAGE"
+	NGINX_ENABLE_PROMETHEUS=0
+	fi
+
+
+	if [[ "$distro" == "alpine" ]]; then
+		find_php=$(ls /usr/sbin/php-fpm* | tail -n1)
+	
+	else
+	find_php=$(whereis php-fpm | awk '{print $2}')
+	fi
+
+	$find_php -F -O -y /php-fpm/www.conf  &>>/dev/stdout &
+	ps2=$!
+
+	if [ "$FPM_ENABLE_PROMETHEUS" == 1 ]; then
+	echo "···································································································"
+	echo "---->  FPM_ENABLE_PROMETHEUS FOUND..."
+	echo "---->  ACTIVATING PROMETHEUS METRICS  :9253/metrics"
+	/php-fpm/phpfpm_exporter --phpfpm.socket-paths=/php-fpm/www.sock --web.listen-address=":9253" --web.telemetry-path="/metrics" &>>/dev/stdout &
+	psPrometheusFpm=$!
+	fi
+
+
+	while true
+	do
+	kill -0 $ps1 &>/dev/null
+	kill -0 $ps2 &>/dev/null
+	if [ "$FPM_ENABLE_PROMETHEUS" == 1 ]; then
+	kill -0 $psPrometheusFpm &>/dev/null
+	fi
+	if [ "$NGINX_ENABLE_PROMETHEUS" == 1 ]; then
+	kill -0 $psPrometheusNginx &>/dev/null
+	fi
+	sleep 5
+	done

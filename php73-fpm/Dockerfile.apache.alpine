@@ -116,18 +116,19 @@ rm -rf /var/www/localhost/htdocs/* && mkdir -p /run/apache2 && rm -rf /var/cache
 
 COPY s2i/bin/ /usr/libexec/s2i
 
-COPY security.conf /etc/apache2/conf.d/security.conf
+COPY apache-security.conf /etc/apache2/conf.d/security.conf
 
 COPY info.php /var/www/html/index.php
 
 COPY www.conf /php-fpm/www.conf
 
+COPY prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
 
 RUN mkdir -p /opt/composer_env /var/www/html /usr/share/composer_install /usr/share/httpd /var/log/$PHP_VERSION && usermod -u 1001 apache && usermod -aG 0 apache && touch /etc/localtime /etc/timezone && \
 chown -R 1001 /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chgrp -R 0 /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /usr/share/httpd /var/log/apache2 /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chmod -R g=u /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod +x /usr/libexec/s2i/*
+chmod +x /usr/libexec/s2i/* /php-fpm/phpfpm_exporter
 
 WORKDIR /var/www/html
 
@@ -141,6 +142,6 @@ FPM_USER=apache
 
 USER 1001:0
 
-EXPOSE 8080
+EXPOSE 8080 9253
 
 CMD ["/usr/libexec/s2i/run"]
