@@ -59,7 +59,8 @@ mkdir -p /usr/share/composer_install && \
 chown  -R 1001 /opt/composer_env /var/log/httpd/ /var/opt/remi /etc/opt/remi /opt/remi /usr/share/composer_install /run/httpd /var/www/html /usr/share/httpd /etc/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chgrp -R 0 /opt/composer_env /var/log/httpd/ /run/httpd /opt/remi /etc/opt/remi /var/opt/remi /var/www/html  /usr/share/composer_install /usr/share/httpd /etc/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chmod -R g=u /opt/composer_env /var/log/httpd/ /run/httpd /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /etc/httpd /usr/share/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod +x /usr/libexec/s2i/*
+chmod +x /usr/libexec/s2i/* && \
+chmod g=u -R /usr/local
 
 WORKDIR /var/www/html
 

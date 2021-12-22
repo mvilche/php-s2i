@@ -50,6 +50,12 @@ sed -i "s@nexus_custom_repo@$NEXUS_COMPOSER_REPO@" composer.json
 composer config -g repo.packagist false
 fi
 
+
+if [[ $COMPOSER_SELF_UPDATE == 1 ]]; then
+echo "----> COMPOSER_SELF_UPDATE FOUND!"
+composer self-update --1
+fi
+
 if [[ $COMPOSER_AUTOLOAD_OPTMIZATION == 1 ]]; then
 echo "----> COMPOSER_AUTOLOAD_OPTMIZATION FOUND!"
 composer install --optimize-autoloader --no-dev -vvv --no-scripts -d $DOCROOT

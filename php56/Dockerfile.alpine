@@ -98,7 +98,8 @@ RUN mkdir -p /opt/composer_env /var/www/html /usr/share/composer_install /usr/sh
 chown -R 1001 /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chgrp -R 0 /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /usr/share/httpd /var/log/apache2 /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chmod -R g=u /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod +x /usr/libexec/s2i/*
+chmod +x /usr/libexec/s2i/* && \
+chmod g=u -R /usr/local
 
 WORKDIR /var/www/html
 

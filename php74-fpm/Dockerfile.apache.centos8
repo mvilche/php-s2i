@@ -69,10 +69,10 @@ COPY prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
 
 RUN mkdir -p /opt/composer_env /var/www/html/storage/.noDelete && usermod -u 1001 apache && usermod -aG 0 apache && rm -rf /etc/httpd/conf.d/$PHP_VERSION-php.conf /etc/localtime /etc/httpd/conf.d/welcome.conf && touch /etc/localtime /etc/timezone && \
 mkdir -p /usr/share/composer_install && \
-chown  -R 1001 /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /usr/share/composer_install /var/www/html /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chgrp -R 0 /php-fpm /opt/composer_env /opt/remi /etc/opt/remi /var/opt/remi  /var/www/html  /usr/share/composer_install /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod -R g=u /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod +x /usr/libexec/s2i/* /php-fpm/phpfpm_exporter
+chown  -R 1001 /usr/local/bin/composer /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /usr/share/composer_install /var/www/html /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chgrp -R 0 /usr/local/bin/composer /php-fpm /opt/composer_env /opt/remi /etc/opt/remi /var/opt/remi  /var/www/html  /usr/share/composer_install /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chmod -R g=u /usr/local/bin/composer /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chmod +x /usr/libexec/s2i/* /php-fpm/phpfpm_exporter /usr/local/bin/composer
 
 WORKDIR /var/www/html
 

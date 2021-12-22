@@ -116,10 +116,11 @@ COPY security.conf /etc/apache2/conf.d/security.conf
 COPY 99-custom_overrides.ini /etc/$PHP_VERSION/conf.d/99-custom_overrides.ini
 
 RUN mkdir -p /opt/composer_env /var/www/html /usr/share/composer_install /usr/share/httpd && usermod -u 1001 apache && usermod -aG 0 apache && touch /etc/localtime /etc/timezone && \
-chown -R 1001 /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chgrp -R 0 /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /usr/share/httpd /var/log/apache2 /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod -R g=u /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod +x /usr/libexec/s2i/*
+chown -R 1001 /usr/local/bin/composer /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chgrp -R 0 /usr/local/bin/composer /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /usr/share/httpd /var/log/apache2 /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chmod -R g=u /usr/local/bin/composer /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chmod +x /usr/libexec/s2i/* /usr/local/bin/composer && \
+chmod g=u -R /usr/local
 
 WORKDIR /var/www/html
 
