@@ -7,7 +7,7 @@
 #	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
 
-set -e
+#set -e
 shopt -u dotglob
 DOCROOT="/var/www/html"
 export COMPOSER_MEMORY_LIMIT=-1
@@ -20,62 +20,94 @@ fi
 
   if [ -d /tmp/artifacts/vendor ]; then
   echo "---> RESTORING VENDOR FROM CACHE..."
-  cp -rf /tmp/artifacts/vendor $DOCROOT/vendor
-  rm -rf /tmp/artifacts/vendor
+  cp -rf /tmp/artifacts/vendor $DOCROOT/vendor || exit 1
+  rm -rf /tmp/artifacts/vendor || exit 1
   fi
 
   if [ -d /tmp/artifacts/node_modules ]; then
   echo "---> RESTORING NODE_MODULES FROM CACHE..."
-  cp -rf /tmp/artifacts/node_modules $DOCROOT/node_modules
-  rm -rf /tmp/artifacts/node_modules
+  cp -rf /tmp/artifacts/node_modules $DOCROOT/node_modules || exit 1
+  rm -rf /tmp/artifacts/node_modules || exit 1
   fi
 
 echo "---> INSTALL SOURCE CODE..."
-cp -rf /tmp/src/.  $DOCROOT/
-rm -rf /tmp/src
+cp -rf /tmp/src/.  $DOCROOT/ || exit 1
+rm -rf /tmp/src || exit 1
 
 
 if [[ -f "$DOCROOT/composer.json" ]]; then
 echo "----> COMPOSER FOUND!"
 echo "----> INSTALLING DEPENDENCIES..."
 cd $DOCROOT	
-mkdir -p $HOME/.composer
-echo "{}" > $HOME/.composer/composer.json
+mkdir -p $HOME/.composer || exit 1
+echo "{}" > $HOME/.composer/composer.json || exit 1
+
 
 if [[ $COMPOSER_SELF_UPDATE == 1 ]]; then
 echo "----> COMPOSER_SELF_UPDATE FOUND!"
-composer self-update --1
+composer self-update --1 || exit 1
 fi
 
 if [[ ! -z $NEXUS_COMPOSER_REPO ]]; then
 echo "----> NEXUS_COMPOSER_REPO FOUND!"
-composer config -g secure-http false
-composer config -g repositories.packagist composer "$NEXUS_COMPOSER_REPO"
+composer config -g secure-http false || exit 1
+composer config -g repositories.packagist composer "$NEXUS_COMPOSER_REPO" || exit 1
 fi
+
+export VALIDATION_FAILED=
+export COMPOSER_LOCK_NOT_FOUND=
+if [[ -f "$DOCROOT/composer.lock" ]]; then
+if [[ $COMPOSER_VALIDATE_LOCK_DISABLE == 1 ]]; then
+echo "----> COMPOSER_VALIDATE_LOCK_DISABLE FOUND!"
+echo "----> CONTINUE WITHOUT VALIDATION composer.lock"
+export VALIDATION_FAILED=0
+else
+echo "----> CHECK IF composer.lock IS UP TO DATE WITH THE LATEST CHANGES IN composer.json"
+composer validate --no-check-all --no-check-publish
+if [[ "$?" != 0 ]]; then
+echo "----> WARNING!!! PROBLEM DETECTED"
+echo "----> RUNNING composer update COMMAND!"
+composer update -vvv --no-scripts -d $DOCROOT
+export VALIDATION_FAILED=1
+fi
+fi
+else
+echo "----> composer.lock NOT FOUND!"
+export COMPOSER_LOCK_NOT_FOUND=1
+fi
+
 
 if [[ ! -z $OVERRIDE_COMPOSER_COMMAND ]]; then
 echo "----> OVERRIDE_COMPOSER_COMMAND FOUND - RUNNING..."
 echo "----> WARNING!! ALL DEFINED VARIABLES WILL BE OMITTED..."
 echo "RUNNING: $OVERRIDE_COMPOSER_COMMAND"
-eval "$OVERRIDE_COMPOSER_COMMAND"
+eval "$OVERRIDE_COMPOSER_COMMAND" || exit 1
 else
 if [[ $COMPOSER_AUTOLOAD_OPTMIZATION == 1 ]]; then
 echo "----> COMPOSER_AUTOLOAD_OPTMIZATION FOUND!"
-composer install --optimize-autoloader --no-dev -vvv --no-scripts -d $DOCROOT
+composer install --optimize-autoloader --no-dev -vvv --no-scripts -d $DOCROOT || exit 1
 else
 echo "----> COMPOSER_AUTOLOAD_OPTMIZATION NOT FOUND!"
 echo "----> CONTINUE WITHOUT COMPOSER_AUTOLOAD_OPTMIZATION"
-composer install -vvv --no-scripts -d $DOCROOT
+composer install -vvv --no-scripts -d $DOCROOT || exit 1
 fi
 
 if [[ ! -z $EXTRA_COMPOSER_COMMAND ]]; then
 echo "----> EXTRA_COMPOSER_COMMAND FOUND - RUNNING..."
 echo "RUNNING: $EXTRA_COMPOSER_COMMAND"
-eval "$EXTRA_COMPOSER_COMMAND"
+eval "$EXTRA_COMPOSER_COMMAND" || exit 1
 fi
 
 fi
 echo "----> END INSTALL COMPOSER..."
+if [[ $VALIDATION_FAILED == 1 ]]; then
+echo "----> WARNING!! - THE PROCESS DETECTED THAT composer.lock DOES NOT MATCH composer.json
+      CONSIDER UPDATING THE composer.lock AND UPLOADING THE CHANGES TO THE GIT REPOSITORY!"
+fi
+if [[ $COMPOSER_LOCK_NOT_FOUND == 1 ]]; then
+echo "----> WARNING!! - composer.lock NOT FOUND. 
+     CONSIDER ADDING composer.lock FILE INTO YOUR SOURCE REPOSITORY!"
+fi
 else
 echo "----> NO COMPOSER FILE FOUND! - CONTINUE WITHOUT COMPOSER BUILD TASKS"
 fi

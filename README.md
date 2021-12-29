@@ -58,10 +58,14 @@
 
 | Environment | Details |
 | ------ | ------ |
-| NEXUS_COMPOSER_REPO | Url private composer repository  |
-| COMPOSER_SELF_UPDATE | Set composer self-update --1 before run composer command. 1(Enabled), 0(Disabled) - Default 0 |
+| NEXUS_COMPOSER_REPO | Url private composer repository |
+| COMPOSER_SELF_UPDATE | Set composer self-update --1 before run composer command. Default use composer v2 - Values: 1(Enabled), 0(Disabled) - Default 0 |
 | EXTRA_COMPOSER_COMMAND | Run extra composer command after install dependencies process |
 | COMPOSER_AUTOLOAD_OPTMIZATION | Run composer "composer install --optimize-autoloader --no-dev" in build process. 1(Enabled), 0(Disabled) - Default 0 |
+| COMPOSER_VALIDATE_LOCK_DISABLE | Disable validation composer.lock file and auto composer update - Values: 1(Disable), 0(Disabled) - Default 0 |
+| OVERRIDE_COMPOSER_COMMAND | Override default composer command execute in build process |
+
+
 
 
 ### Generate builder image
