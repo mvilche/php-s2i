@@ -125,9 +125,9 @@ COPY prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
 COPY prometheus/nginx-prometheus-exporter /etc/nginx/nginx-prometheus-exporter
 
 RUN mkdir -p /opt/composer_env /var/www/html /run/nginx /var/lib/nginx/logs /var/log/nginx /usr/share/composer_install /var/log/$PHP_VERSION && usermod -u 1001 nginx && usermod -aG 0 nginx && touch /etc/localtime /etc/timezone && \
-chown -R 1001 /usr/local/bin/composer /php-fpm /var/log/$PHP_VERSION /run/nginx /etc/nginx /var/lib/nginx /var/log/nginx /etc/$PHP_VERSION /opt/composer_env /var/www/html /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chgrp -R 0 /usr/local/bin/composer /php-fpm /var/log/$PHP_VERSION /run/nginx /etc/nginx /var/lib/nginx /var/log/nginx /etc/$PHP_VERSION /opt/composer_env /var/www/html /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod -R g=u /usr/local/bin/composer /php-fpm /var/log/$PHP_VERSION /run/nginx /etc/nginx /var/lib/nginx /var/log/nginx /etc/$PHP_VERSION /opt/composer_env /var/www/html /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chown -R 1001 /usr/local/bin/composer /php-fpm /var/log/$PHP_VERSION /run/nginx /etc/nginx /usr/share/nginx /var/lib/nginx /var/log/nginx /etc/$PHP_VERSION /opt/composer_env /var/www/html /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chgrp -R 0 /usr/local/bin/composer /php-fpm /var/log/$PHP_VERSION /run/nginx /etc/nginx /usr/share/nginx /var/lib/nginx /var/log/nginx /etc/$PHP_VERSION /opt/composer_env /var/www/html /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chmod -R g=u /usr/local/bin/composer /php-fpm /var/log/$PHP_VERSION /run/nginx /etc/nginx /usr/share/nginx /var/lib/nginx /var/log/nginx /etc/$PHP_VERSION /opt/composer_env /var/www/html /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chmod +x /usr/libexec/s2i/* /php-fpm/phpfpm_exporter /etc/nginx/nginx-prometheus-exporter /usr/local/bin/composer && \
 chmod g=u -R /usr/local
 
