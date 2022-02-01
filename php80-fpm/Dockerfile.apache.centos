@@ -1,9 +1,9 @@
-FROM centos:8
+FROM centos:7
 
 ENV PHP_VERSION=php80 \
 COMPOSER_VERSION=2.2.0 \
-EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
-REMI=https://rpms.remirepo.net/enterprise/remi-release-8.rpm \
+EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
+REMI=https://rpms.remirepo.net/enterprise/remi-release-7.rpm \
 LANG=es_ES.UTF-8 \
 LANGUAGE=es_ES.UTF-8 \
 LC_COLLATE=C \
@@ -19,9 +19,7 @@ LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
       
 
 RUN echo "LANG=$LANG" > /etc/locale.conf && \
-sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
-sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-* && \
-yum install glibc-langpack-en glibc-langpack-es -y && yum update -y && yum install $EPEL yum-utils -y && yum install $REMI -y && \
+yum update -y && yum install $EPEL yum-utils -y && yum install $REMI -y && \
 curl –sL https://rpm.nodesource.com/setup_14.x | bash - && \
 yum --enablerepo=remi install nodejs git $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-tidy $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
 $PHP_VERSION-php-common $PHP_VERSION-php-intl $PHP_VERSION-php-mysqlnd $PHP_VERSION-php-pgsql $PHP_VERSION-php-process $PHP_VERSION-php-geos $PHP_VERSION-php-pecl-geoip $PHP_VERSION-php-mbstring $PHP_VERSION-php-pecl-zip $PHP_VERSION-php-gd $PHP_VERSION-php-ldap \

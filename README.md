@@ -18,7 +18,7 @@
 - Composer Version 1.10.16
 - Php-fpm + Apache Images
 - Php-fpm + Nginx Images
-- Apache + Mod_php Images
+- Apache + Mod_php Images (Deprecated)
 - Nginx Prometheus metrics
 - Fpm Prometheus metrics
 
