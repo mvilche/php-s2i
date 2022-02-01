@@ -16,10 +16,9 @@ LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
       io.openshift.s2i.scripts-url="image:///usr/libexec/s2i"
       
 
-RUN apk --no-cache upgrade --available && apk add --update --no-cache git busybox-suid findutils nodejs npm tzdata shadow nginx bash curl \
+RUN apk --no-cache upgrade --available && apk add --update --no-cache git tidyhtml busybox-suid findutils nodejs npm tzdata shadow nginx bash curl \
 $PHP_VERSION \
 $PHP_VERSION-fpm \
-$PHP_VERSION-tidy \
 $PHP_VERSION-intl \
 $PHP_VERSION-openssl \
 $PHP_VERSION-dba \

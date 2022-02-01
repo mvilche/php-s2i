@@ -88,13 +88,14 @@ if [ "$MIGRATIONS" == 1 ]; then
 	if [ ! -z "$ARTISAN_COMMAND_OVERRIDE" ]; then
 
 	echo "----> ARTISAN_COMMAND_OVERRIDE FOUND..."
+	echo "----> EXECUTING $ARTISAN_COMMAND_OVERRIDE"
 	$ARTISAN_COMMAND_OVERRIDE
 	else
 	php artisan key:generate --force 
 	php artisan migrate --force
 	fi
 	else
-	echo "----> ARTISAN NOT FOUND"
+	echo "----> ARTISAN MIGRATIONS NOT FOUND"
 	fi
 	else
     echo "----> CONTINUE WITHOUT MIGRATIONS"

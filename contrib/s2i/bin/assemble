@@ -62,7 +62,7 @@ echo "----> COMPOSER_VALIDATE_LOCK_DISABLE FOUND!"
 echo "----> CONTINUE WITHOUT VALIDATION composer.lock"
 export VALIDATION_FAILED=0
 else
-echo "----> CHECK IF composer.lock IS UP TO DATE WITH THE LATEST CHANGES IN composer.json"
+echo "----> CHECKING IF composer.lock IS UP TO DATE WITH THE LATEST CHANGES IN composer.json"
 composer validate --no-check-all --no-check-publish
 if [[ "$?" != 0 ]]; then
 echo "----> WARNING!!! PROBLEM DETECTED"
