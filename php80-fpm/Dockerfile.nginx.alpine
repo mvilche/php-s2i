@@ -133,7 +133,7 @@ chmod g=u -R /usr/local
 WORKDIR /var/www/html
 
 ENV HOME=/usr/share/nginx \
-NGINX_CONFIGDIR=/etc/apache2 \
+NGINX_CONFIGDIR=/etc/nginx \
 FPM_MAX_CHILDREN=5 \
 NGINX_WORKER_PROCESSES=1 \
 NGINX_WORKER_CONNECTION=1024 \

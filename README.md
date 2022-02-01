@@ -1,4 +1,4 @@
-# PHP S2I Images CentOS  / Alpine
+# PHP S2I Images CentOS  / Alpine / RockyLinux
 
 ![Docker Stars](https://img.shields.io/docker/stars/mvilche/php-s2i.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/mvilche/php-s2i.svg)
@@ -34,11 +34,11 @@
 | WAITFOR_PORT | set port for WAITFOR_HOST |
 | MIGRATIONS | Enable artisan migrations. 1/0 |
 | ARTISAN_COMMAND_OVERRIDE | Override artisan command execute when migration is enabled |
-| PHP_MEMORY_LIMIT | Set memory limit in PHP (Example: 512M) - Default value -1(no limit) - Only in fpm images |
-| FPM_MAX_CHILDREN | Set max concurrent clients fpm (Example: 250) - Default value 50 - Only in fpm images |
+| PHP_MEMORY_LIMIT | Set memory limit in PHP (Example: 512M) - Default value -1(no limit) |
+| FPM_MAX_CHILDREN | Set max concurrent clients fpm (Example: 250) - Default value 50 |
 | RUN_USER_ID | Start cointainer with specific userid - Only in fpm images |
-| FPM_ENABLE_PROMETHEUS | Enable FPM Prometheus metrics  Values: 0 (Disable) - 1 (Enable) - Only in fpm images|
-| NGINX_ENABLE_PROMETHEUS | Enable NGINX Prometheus metrics  Values: 0 (Disable) - 1 (Enable) - Only in fpm images|
+| FPM_ENABLE_PROMETHEUS | Enable FPM Prometheus metrics  Values: 0 (Disable) - 1 (Enable) |
+| NGINX_ENABLE_PROMETHEUS | Enable NGINX Prometheus metrics  Values: 0 (Disable) - 1 (Enable) |
 
 
 ##### Apache images tuning
@@ -50,8 +50,8 @@
 ##### Nginx images tuning
 | Environment | Details |
 | ------ | ------ |
-| NGINX_WORKER_CONNECTION | Set max concurrent clients in Nginx (Example: 500) - Default value 1024 - Only in fpm images |
-| NGINX_WORKER_PROCESSES | Set number process in Nginx (Example: 20) - Default value 1 - Only in fpm images |
+| NGINX_WORKER_CONNECTION | Set max concurrent clients in Nginx (Example: 500) - Default value 1024  |
+| NGINX_WORKER_PROCESSES | Set number process in Nginx (Example: 20) - Default value 1  |
 
 
 ### Build Environments 

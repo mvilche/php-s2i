@@ -1,9 +1,9 @@
-FROM centos:7
+FROM rockylinux:8
 
-ENV PHP_VERSION=php80 \
+ENV PHP_VERSION=php72 \
 COMPOSER_VERSION=2.2.0 \
-EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
-REMI=https://rpms.remirepo.net/enterprise/remi-release-7.rpm \
+EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
+REMI=https://rpms.remirepo.net/enterprise/remi-release-8.rpm \
 LANG=es_ES.UTF-8 \
 LANGUAGE=es_ES.UTF-8 \
 LC_COLLATE=C \

@@ -146,15 +146,21 @@ if [ "$MIGRATIONS" == 1 ]; then
 	echo "---->  STARTING APP..."
 	echo "···································································································"
 	
+    echo ""
+	echo "···································································································"
+	echo "---->  USING PHP VERSION"
+	php --version
+	echo "···································································································"
+
 	distro=$(awk -F= '$1=="ID" { print $2 ;}' /etc/os-release)
 
-	if [[ -d "/etc/httpd" ]] || [[ -d "/etc/apache2" ]]; then
+	if [[ -f "/etc/httpd/conf/httpd.conf" ]] || [[ -f "/etc/apache2/httpd.conf" ]]; then
 	echo "---->  DETECT APACHE IMAGE"
 	httpd -DFOREGROUND &>>/dev/stdout &
 	ps1=$!
 	fi
 	
-	if [[ -d "/etc/nginx" ]]; then
+	if [[ -f "/etc/nginx/nginx.conf" ]]; then
 
 	echo "---->  DETECT NGINX IMAGE"	
 	nginx -g 'daemon off;'&>>/dev/stdout &
