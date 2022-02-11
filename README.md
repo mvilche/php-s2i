@@ -1,4 +1,11 @@
-# PHP S2I Images CentOS  / Alpine / RockyLinux
+# PHP S2I Images CentOS  / Alpine / RockyLinux / AlmaLinux
+
+---
+**NOTE**
+
+Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
+
+---
 
 ![Docker Stars](https://img.shields.io/docker/stars/mvilche/php-s2i.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/mvilche/php-s2i.svg)
@@ -34,7 +41,7 @@
 | WAITFOR_PORT | set port for WAITFOR_HOST |
 | MIGRATIONS | Enable artisan migrations. 1/0 |
 | ARTISAN_COMMAND_OVERRIDE | Override artisan command execute when migration is enabled |
-| PHP_MEMORY_LIMIT | Set memory limit in PHP (Example: 512M) - Default value -1(no limit) |
+| PHP_MEMORY_LIMIT | Set memory limit in PHP (Example: 512M) - Default value -1 (no limit) |
 | FPM_MAX_CHILDREN | Set max concurrent clients fpm (Example: 250) - Default value 50 |
 | RUN_USER_ID | Start cointainer with specific userid - Only in fpm images |
 | FPM_ENABLE_PROMETHEUS | Enable FPM Prometheus metrics  Values: 0 (Disable) - 1 (Enable) |
@@ -44,8 +51,8 @@
 ##### Apache images tuning
 | Environment | Details |
 | ------ | ------ |
-| MAX_REQUEST_WORKER | Set max concurrent clients in Apache (Example: 500) - Default value 250 - Only in fpm images |
-| SERVER_LIMIT | Set number server limit in Apache (Example: 20) - Default value 16 - Only in fpm images |
+| MAX_REQUEST_WORKER | Set max concurrent clients in Apache (Example: 500) - Default value 250 |
+| SERVER_LIMIT | Set number server limit in Apache (Example: 20) - Default value 16 |
 
 ##### Nginx images tuning
 | Environment | Details |
