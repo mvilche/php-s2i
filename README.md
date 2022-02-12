@@ -66,12 +66,11 @@ Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
 | Environment | Details |
 | ------ | ------ |
 | NEXUS_COMPOSER_REPO | Url private composer repository |
-| COMPOSER_SELF_UPDATE | Set composer self-update --1 before run composer command. Default use composer v2 - Values: 1(Enabled), 0(Disabled) - Default 0 |
+| COMPOSER_SELF_UPDATE | Set composer self-update --1 before run composer command. Default use last version composer v2 - Values: 1(Enabled), 0(Disabled) - Default 0 |
 | EXTRA_COMPOSER_COMMAND | Run extra composer command after install dependencies process |
-| COMPOSER_AUTOLOAD_OPTMIZATION | Run composer "composer install --optimize-autoloader --no-dev" in build process. 1(Enabled), 0(Disabled) - Default 0 |
-| COMPOSER_VALIDATE_LOCK_DISABLE | Disable validation composer.lock file and auto composer update - Values: 1(Disable), 0(Disabled) - Default 0 |
-| OVERRIDE_COMPOSER_COMMAND | Override default composer command execute in build process |
-
+| COMPOSER_AUTOLOAD_OPTMIZATION | Run composer "composer install --optimize-autoloader --no-dev" in build process. 1(Enable), 0(Disable) - Default 0 |
+| COMPOSER_VALIDATE_LOCK_DISABLE | Disable validation composer.lock file and auto composer update - Values: 1(Enable), 0(Disable) - Default 0 |
+| OVERRIDE_COMPOSER_COMMAND | Override default composer command execute in build process. Default command: "composer install -vvv --no-scripts" |
 
 
 
@@ -79,9 +78,9 @@ Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
 
 ```console
 
-Example build php80 fpm nginx alpine
+Example build php80 fpm Nginx Alpine
 
- docker build -t s2i-php:80-fpm-nginx -f php80-fpm/Dockerfile.nginx.alpine contrib
+ docker build -t s2i-php:80-fpm-nginx -f php80-fpm/Dockerfile.nginx.alpine .
 
 ```
 
@@ -101,6 +100,7 @@ s2i build https://github.com/my_phpapp.git s2i-php:71 myphp_app:latest --increme
 docker run -p 8080:8080 myphp_app:latest
 
 ```
+
 
 ### How use s2i
 

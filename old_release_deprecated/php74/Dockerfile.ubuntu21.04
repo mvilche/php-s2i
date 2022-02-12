@@ -42,9 +42,9 @@ RUN echo "VERSION PHP INSTALADA: " && php -version && php -r "copy('https://getc
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=$COMPOSER_VERSION && rm composer-setup.php && \
 apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/*
 
-COPY s2i/bin/ /usr/libexec/s2i
+COPY contrib/s2i/bin/ /usr/libexec/s2i
 
-#COPY security.conf /etc/apache2/conf-enabled/security.conf
+#COPY contrib/security.conf /etc/apache2/conf-enabled/security.conf
 
 RUN mkdir /opt/composer_env && usermod -u 1001 www-data && usermod -aG 0 www-data && rm -rf /etc/localtime /var/www/html/* && touch /etc/localtime /etc/timezone && \
 mkdir -p /usr/share/composer_install && \

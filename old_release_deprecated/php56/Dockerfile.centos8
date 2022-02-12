@@ -50,9 +50,9 @@ yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cach
 
 WORKDIR /opt
 
-COPY s2i/bin/ /usr/libexec/s2i
+COPY contrib/s2i/bin/ /usr/libexec/s2i
 
-COPY security.conf /etc/httpd/conf.d/security.conf
+COPY contrib/security.conf /etc/httpd/conf.d/security.conf
 
 RUN mkdir /opt/composer_env && usermod -u 1001 apache && usermod -aG 0 apache && rm -rf /etc/localtime /var/www/html/* /etc/httpd/conf.d/welcome.conf && touch /etc/localtime /etc/timezone && \
 mkdir -p /usr/share/composer_install && \

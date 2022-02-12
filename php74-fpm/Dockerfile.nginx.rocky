@@ -58,19 +58,19 @@ yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cach
 WORKDIR /var/www/html
 
 
-COPY s2i/bin/ /usr/libexec/s2i
+COPY contrib/s2i/bin/ /usr/libexec/s2i
 
-COPY info.php /var/www/html/index.php
+COPY contrib/info.php /var/www/html/index.php
 
-COPY nginx-http.conf /etc/nginx/http.d/default.conf
+COPY contrib/nginx-http.conf /etc/nginx/http.d/default.conf
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY contrib/nginx.conf /etc/nginx/nginx.conf
 
-COPY www.conf /php-fpm/www.conf
+COPY contrib/www.conf /php-fpm/www.conf
 
-COPY prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
+COPY contrib/prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
 
-COPY prometheus/nginx-prometheus-exporter /etc/nginx/nginx-prometheus-exporter
+COPY contrib/prometheus/nginx-prometheus-exporter /etc/nginx/nginx-prometheus-exporter
 
 RUN mkdir -p /opt/composer_env /etc/nginx/http.d /usr/share/nginx /var/www/html /run/nginx /var/lib/nginx/logs /var/log/nginx && usermod -u 1001 nginx && usermod -aG 0 nginx && rm -rf /etc/nginx/nginx.conf.default /etc/localtime && touch /etc/localtime /etc/timezone && \
 mkdir -p /usr/share/composer_install && \

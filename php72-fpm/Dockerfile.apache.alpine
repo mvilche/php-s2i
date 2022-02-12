@@ -114,15 +114,15 @@ echo "VERSION PHP INSTALLED: " && php -version && php -r "copy('https://getcompo
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=$COMPOSER_VERSION && rm composer-setup.php && \
 rm -rf /var/www/localhost/htdocs/* && mkdir -p /run/apache2 && rm -rf /var/cache/apk/* /etc/localtime /etc/apache2/conf.d/mpm.conf
 
-COPY s2i/bin/ /usr/libexec/s2i
+COPY contrib/s2i/bin/ /usr/libexec/s2i
 
-COPY apache-security.conf /etc/apache2/conf.d/security.conf
+COPY contrib/apache-security.conf /etc/apache2/conf.d/security.conf
 
-COPY info.php /var/www/html/index.php
+COPY contrib/info.php /var/www/html/index.php
 
-COPY www.conf /php-fpm/www.conf
+COPY contrib/www.conf /php-fpm/www.conf
 
-COPY prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
+COPY contrib/prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
 
 RUN mkdir -p /opt/composer_env /var/www/html /usr/share/composer_install /usr/share/httpd /var/log/$PHP_VERSION && usermod -u 1001 apache && usermod -aG 0 apache && touch /etc/localtime /etc/timezone && \
 chown -R 1001 /usr/local/bin/composer /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \

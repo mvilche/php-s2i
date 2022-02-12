@@ -108,11 +108,11 @@ echo "VERSION PHP INSTALADA: " && php -version && php -r "copy('https://getcompo
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=$COMPOSER_VERSION && rm composer-setup.php && \
 rm -rf /var/www/localhost/htdocs/* && mkdir -p /run/apache2 && rm -rf /var/cache/apk/* /etc/localtime
 
-COPY s2i/bin/ /usr/libexec/s2i
+COPY contrib/s2i/bin/ /usr/libexec/s2i
 
-COPY security.conf /etc/apache2/conf.d/security.conf
+COPY contrib/security.conf /etc/apache2/conf.d/security.conf
 
-COPY 99-custom_overrides.ini /etc/$PHP_VERSION/conf.d/99-custom_overrides.ini
+COPY contrib/99-custom_overrides.ini /etc/$PHP_VERSION/conf.d/99-custom_overrides.ini
 
 RUN mkdir -p /opt/composer_env /var/www/html /usr/share/composer_install /usr/share/httpd && usermod -u 1001 apache && usermod -aG 0 apache && touch /etc/localtime /etc/timezone && \
 chown -R 1001 /usr/local/bin/composer /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \

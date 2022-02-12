@@ -59,11 +59,11 @@ yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cach
 WORKDIR /var/www/html
 
 
-COPY s2i/bin/ /usr/libexec/s2i
-COPY apache-security.conf /etc/httpd/conf.d/security.conf
-COPY info.php /var/www/html/index.php
-COPY www.conf /php-fpm/www.conf
-COPY prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
+COPY contrib/s2i/bin/ /usr/libexec/s2i
+COPY contrib/apache-security.conf /etc/httpd/conf.d/security.conf
+COPY contrib/info.php /var/www/html/index.php
+COPY contrib/www.conf /php-fpm/www.conf
+COPY contrib/prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
 
 
 RUN mkdir -p /opt/composer_env /var/www/html/storage/.noDelete && usermod -u 1001 apache && usermod -aG 0 apache && rm -rf /etc/httpd/conf.d/$PHP_VERSION-php.conf /etc/localtime /etc/httpd/conf.d/welcome.conf && touch /etc/localtime /etc/timezone && \
