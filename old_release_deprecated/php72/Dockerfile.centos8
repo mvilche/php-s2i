@@ -1,7 +1,7 @@
 FROM centos:8
 
 ENV PHP_VERSION=php72 \
-COMPOSER_VERSION=2.2.0 \
+COMPOSER_VERSION=2.2.6 \
 EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
 REMI=https://rpms.remirepo.net/enterprise/remi-release-8.rpm \
 LANG=es_ES.UTF-8 \
@@ -23,7 +23,7 @@ yum install glibc-langpack-en glibc-langpack-es -y && yum update -y && yum insta
 curl –sL https://rpm.nodesource.com/setup_14.x | bash - && \
 yum --enablerepo=remi install nodejs git $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-tidy $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
 $PHP_VERSION-php-common $PHP_VERSION-php-intl $PHP_VERSION-php-pgsql $PHP_VERSION-php-mysqlnd $PHP_VERSION-php-process $PHP_VERSION-php-geos $PHP_VERSION-php-pecl-geoip $PHP_VERSION-php-mbstring $PHP_VERSION-php-pecl-zip $PHP_VERSION-php-gd $PHP_VERSION-php-ldap \
-$PHP_VERSION-php-bcmath $PHP_VERSION-php-mcrypt openssl unzip curl nc httpd wich $PHP_VERSION-php-pecl-apcu -y
+$PHP_VERSION-php-bcmath $PHP_VERSION-php-mcrypt openssl unzip curl nc httpd which $PHP_VERSION-php-pecl-apcu -y
 
 RUN sed -i -e "s/^Listen 80/Listen 8080/" /etc/httpd/conf/httpd.conf && \
 sed -ri -e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' /etc/httpd/conf/httpd.conf && \

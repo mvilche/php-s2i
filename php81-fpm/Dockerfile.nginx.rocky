@@ -1,6 +1,6 @@
-FROM almalinux:8
+FROM rockylinux:8
 
-ENV PHP_VERSION=php72 \
+ENV PHP_VERSION=php81 \
 COMPOSER_VERSION=2.2.6 \
 EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
 REMI=https://rpms.remirepo.net/enterprise/remi-release-8.rpm \
