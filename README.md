@@ -21,11 +21,10 @@ Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
 - S2i build images
 - Composer and npm
 - Artisan Migrations
-- Composer nexus private repository
-- Composer Version 1.10.16
+- Composer Nexus private repository
+- Composer Version 2.2.6
 - Php-fpm + Apache Images
 - Php-fpm + Nginx Images
-- Apache + Mod_php Images (Deprecated)
 - Nginx Prometheus metrics
 - Fpm Prometheus metrics
 
