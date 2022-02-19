@@ -43,25 +43,37 @@ mkdir -p $HOME/.composer || exit 1
 echo "{}" > $HOME/.composer/composer.json || exit 1
 
 
-if [[ $COMPOSER_SELF_UPDATE == 1 ]]; then
-echo "----> COMPOSER_SELF_UPDATE FOUND!"
-composer self-update --1 || exit 1
+if [[ ! -z $COMPOSER_VERSION_USE ]]; then
+echo "----> COMPOSER_VERSION_USE $COMPOSER_VERSION_USE FOUND!"
+echo "----> VIEW RELEASE VERSIONS: https://github.com/composer/composer/releases"
+composer self-update "$COMPOSER_VERSION_USE" || exit 1
+else
+echo "----> USING DEFAULT COMPOSER VERSION:"
+composer --version
 fi
 
 if [[ ! -z $NEXUS_COMPOSER_REPO ]]; then
 echo "----> NEXUS_COMPOSER_REPO FOUND!"
-composer config -g secure-http false || exit 1
+if [[ $NEXUS_COMPOSER_REPO_ENABLE_TLS == 1 ]]; then
+echo "----> NEXUS_COMPOSER_REPO_ENABLE_TLS ENABLE FOUND!"
+composer config --global disable-tls false &>/dev/null || exit 1
+composer config -g secure-http true &>/dev/null || exit 1
 composer config -g repositories.packagist composer "$NEXUS_COMPOSER_REPO" || exit 1
+else
+composer config --global disable-tls true &>/dev/null || exit 1
+composer config -g secure-http false &>/dev/null || exit 1
+composer config -g repositories.packagist composer "$NEXUS_COMPOSER_REPO" || exit 1
+fi
 fi
 
 export VALIDATION_FAILED=
 export COMPOSER_LOCK_NOT_FOUND=
 if [[ -f "$DOCROOT/composer.lock" ]]; then
-if [[ $COMPOSER_VALIDATE_LOCK_DISABLE == 1 ]]; then
-echo "----> COMPOSER_VALIDATE_LOCK_DISABLE FOUND!"
+if [[ $COMPOSER_VALIDATE_LOCK == 0 ]]; then
 echo "----> CONTINUE WITHOUT VALIDATION composer.lock"
 export VALIDATION_FAILED=0
 else
+echo "----> COMPOSER_VALIDATE_LOCK FOUND!"
 echo "----> CHECKING IF composer.lock IS UP TO DATE WITH THE LATEST CHANGES IN composer.json"
 composer validate --no-check-all --no-check-publish
 if [[ "$?" != 0 ]]; then

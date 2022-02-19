@@ -65,12 +65,12 @@ Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
 | Environment | Details |
 | ------ | ------ |
 | NEXUS_COMPOSER_REPO | Url private composer repository |
-| COMPOSER_SELF_UPDATE | Set composer self-update --1 before run composer command. Default use last version composer v2 - Values: 1(Enabled), 0(Disabled) - Default 0 |
+| NEXUS_COMPOSER_REPO_ENABLE_TLS | Enable certificate tls validation for NEXUS_COMPOSER_REPO |
+| COMPOSER_VERSION_USE | Set composer version used in build. Example 2.2.0 |
 | EXTRA_COMPOSER_COMMAND | Run extra composer command after install dependencies process |
-| COMPOSER_AUTOLOAD_OPTMIZATION | Run composer "composer install --optimize-autoloader --no-dev" in build process. 1(Enable), 0(Disable) - Default 0 |
-| COMPOSER_VALIDATE_LOCK_DISABLE | Disable validation composer.lock file and auto composer update - Values: 1(Enable), 0(Disable) - Default 0 |
+| COMPOSER_AUTOLOAD_OPTMIZATION | Run composer "composer install --optimize-autoloader --no-dev -vvv --no-scripts" in build process. 1(Enable), 0(Disable) - Default 0 |
+| COMPOSER_VALIDATE_LOCK | Enable validation composer.lock file and auto composer update - Values: 1(Enable), 0(Disable) - Default 0 |
 | OVERRIDE_COMPOSER_COMMAND | Override default composer command execute in build process. Default command: "composer install -vvv --no-scripts" |
-
 
 
 ### Generate builder image
