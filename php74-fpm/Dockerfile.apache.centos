@@ -18,7 +18,7 @@ LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
       
 
 RUN echo "LANG=$LANG" > /etc/locale.conf && \
-yum update -y && yum install $EPEL yum-utils -y && yum install $REMI -y && \
+yum update -y && yum --setopt=tsflags=nodocs install $EPEL yum-utils -y && yum --setopt=tsflags=nodocs install $REMI -y && \
 curl –sL https://rpm.nodesource.com/setup_14.x | bash - && \
 yum --enablerepo=remi install nodejs git $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-tidy $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
 $PHP_VERSION-php-common $PHP_VERSION-php-intl $PHP_VERSION-php-mysqlnd $PHP_VERSION-php-pgsql $PHP_VERSION-php-process $PHP_VERSION-php-geos $PHP_VERSION-php-pecl-geoip $PHP_VERSION-php-mbstring $PHP_VERSION-php-pecl-zip $PHP_VERSION-php-gd $PHP_VERSION-php-ldap \
@@ -66,16 +66,16 @@ COPY contrib/www.conf /php-fpm/www.conf
 COPY contrib/prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
 
 
-RUN mkdir -p /opt/composer_env /var/www/html/storage/.noDelete && usermod -u 1001 apache && usermod -aG 0 apache && rm -rf /etc/httpd/conf.d/$PHP_VERSION-php.conf /etc/localtime /etc/httpd/conf.d/welcome.conf && touch /etc/localtime /etc/timezone && \
+RUN mkdir -p /opt/composer_env /var/www/html/storage/.noDelete && usermod -u 2190 apache && usermod -aG 0 apache && rm -rf /etc/httpd/conf.d/$PHP_VERSION-php.conf /etc/localtime /etc/httpd/conf.d/welcome.conf && touch /etc/localtime /etc/timezone && \
 mkdir -p /usr/share/composer_install && \
-chown  -R 1001 /usr/local/bin/composer /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /usr/share/composer_install /var/www/html /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chown  -R 2190 /usr/local/bin/composer /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /usr/share/composer_install /var/www/html /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chgrp -R 0 /usr/local/bin/composer /php-fpm /opt/composer_env /opt/remi /etc/opt/remi /var/opt/remi  /var/www/html  /usr/share/composer_install /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chmod -R g=u /usr/local/bin/composer /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chmod +x /usr/libexec/s2i/* /php-fpm/phpfpm_exporter /usr/local/bin/composer
 
 WORKDIR /var/www/html
 
-USER 1001:0
+USER 2190:0
 
 EXPOSE 8080 9253
 
