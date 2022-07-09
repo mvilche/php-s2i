@@ -1,7 +1,7 @@
 FROM centos:7
 
 ENV PHP_VERSION=php74 \
-COMPOSER_VERSION=2.2.6 \
+COMPOSER_VERSION=2.3.9 \
 EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
 REMI=https://rpms.remirepo.net/enterprise/remi-release-7.rpm \
 LANG=es_ES.UTF-8 \

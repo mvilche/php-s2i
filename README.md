@@ -1,4 +1,4 @@
-# PHP S2I Images CentOS  / Alpine / RockyLinux / AlmaLinux
+# PHP S2i Images Alpine / RockyLinux / AlmaLinux / CentOS
 
 ---
 **NOTE**
@@ -6,6 +6,8 @@
 Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
 
 ---
+
+https://github.com/openshift/source-to-image
 
 ![Docker Stars](https://img.shields.io/docker/stars/mvilche/php-s2i.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/mvilche/php-s2i.svg)
@@ -22,7 +24,7 @@ Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
 - Composer and npm
 - Artisan Migrations
 - Composer Nexus private repository
-- Composer Version 2.2.6
+- Composer Version 2.3.9
 - Php-fpm + Apache Images
 - Php-fpm + Nginx Images
 - Nginx Prometheus metrics
@@ -30,7 +32,6 @@ Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
 
 
 ### Deploy Environments
-
 
 
 | Environment | Details |
@@ -45,6 +46,7 @@ Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
 | RUN_USER_ID | Start cointainer with specific userid - Only in fpm images |
 | FPM_ENABLE_PROMETHEUS | Enable FPM Prometheus metrics  Values: 0 (Disable) - 1 (Enable) |
 | NGINX_ENABLE_PROMETHEUS | Enable NGINX Prometheus metrics  Values: 0 (Disable) - 1 (Enable) |
+| DISABLE_AUTODETECT_DOCROOT_FOLDER | Disable autodetect and set Docroot folder - 1 (Disable) |
 
 
 ##### Apache images tuning
@@ -71,6 +73,23 @@ Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
 | COMPOSER_AUTOLOAD_OPTMIZATION | Run composer "composer install --optimize-autoloader --no-dev -vvv --no-scripts" in build process. 1(Enable), 0(Disable) - Default 0 |
 | COMPOSER_VALIDATE_LOCK | Enable validation composer.lock file and auto composer update - Values: 1(Enable), 0(Disable) - Default 0 |
 | OVERRIDE_COMPOSER_COMMAND | Override default composer command execute in build process. Default command: "composer install -vvv --no-scripts" |
+
+
+### User
+
+| udi | gid |
+| ------ | ------ |
+| 2190 | 0 |
+
+
+### Ports
+
+| service | port |
+| ------ | ------ |
+| Apache images | 8080 |
+| Nginx images | 8080 |
+| Fpm prometheus metrics | 9253 |
+| Nginx prometheus metrics | 9113 |
 
 
 ### Generate builder image
