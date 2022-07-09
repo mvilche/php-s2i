@@ -101,6 +101,14 @@ if [ "$MIGRATIONS" == 1 ]; then
     echo "----> CONTINUE WITHOUT MIGRATIONS"
 	fi
 
+	if [[ -z $DISABLE_AUTODETECT_DOCROOT_FOLDER ]]; then
+	DISABLE_AUTODETECT_DOCROOT_FOLDER=0
+	fi
+
+	if [[ $DISABLE_AUTODETECT_DOCROOT_FOLDER == 1 ]]; then
+	echo "----> DISABLE_AUTODETECT_DOCROOT_FOLDER DETECTED!"
+	echo "----> IGNORE AUTO SETTING DOCROOT FOLDER"
+	else
 	if [[ -d $DOCROOT/public ]]; then
 	echo "----> SETTING DOCROOT TO PUBLIC FOLDER..."
 	if [[ -f "/etc/httpd/conf/httpd.conf" ]] || [[ -f "/etc/apache2/httpd.conf" ]]; then
@@ -110,6 +118,10 @@ if [ "$MIGRATIONS" == 1 ]; then
 	sed -i -e 's/root           \/var\/www\/html;/root           \/var\/www\/html\/public;/g' /etc/nginx/http.d/default.conf
 	fi
 	fi
+	fi
+
+
+
 	
 		if [[ ! -z $PHP_MEMORY_LIMIT ]]; then
 		        echo "---->  PHP MEMORY LIMIT FOUND"
