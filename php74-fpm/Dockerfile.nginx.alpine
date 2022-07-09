@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM alpine:3.15
 
 ENV PHP_VERSION=php7 \
 LANG=es_ES.UTF-8 \
