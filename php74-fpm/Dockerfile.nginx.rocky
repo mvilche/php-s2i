@@ -1,4 +1,4 @@
-FROM rockylinux:8
+FROM rockylinux:9
 
 ENV PHP_VERSION=php74 \
 COMPOSER_VERSION=2.3.9 \
