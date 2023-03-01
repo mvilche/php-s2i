@@ -1,6 +1,6 @@
-FROM alpine:3.11
+FROM alpine:3.17
 
-ENV PHP_VERSION=php7 \
+ENV PHP_VERSION=php81 \
 LANG=es_ES.UTF-8 \
 COMPOSER_VERSION=2.5.1 \
 LANGUAGE=es_ES.UTF-8 \
@@ -32,7 +32,6 @@ $PHP_VERSION-pdo_mysql \
 $PHP_VERSION-sodium \
 $PHP_VERSION-pcntl \
 $PHP_VERSION-common \
-$PHP_VERSION-pecl-oauth \
 $PHP_VERSION-xsl \
 $PHP_VERSION-pecl-mailparse \
 $PHP_VERSION-pecl-imagick \
@@ -45,7 +44,6 @@ $PHP_VERSION-doc \
 $PHP_VERSION-fileinfo \
 $PHP_VERSION-mbstring \
 $PHP_VERSION-pecl-yaml \
-$PHP_VERSION-pecl-timezonedb \
 $PHP_VERSION-dev \
 $PHP_VERSION-embed \
 $PHP_VERSION-xmlreader \
@@ -74,7 +72,6 @@ $PHP_VERSION-pdo_odbc \
 $PHP_VERSION-zip \
 $PHP_VERSION-cgi \
 $PHP_VERSION-ctype \
-$PHP_VERSION-pecl-mcrypt \
 $PHP_VERSION-bcmath \
 $PHP_VERSION-calendar \
 $PHP_VERSION-tidy \
@@ -94,6 +91,8 @@ $PHP_VERSION-mysqli \
 $PHP_VERSION-simplexml \
 $PHP_VERSION-xmlwriter \
 apache2-proxy
+
+
 
 RUN  sed -i -e "s/^Listen 80/Listen 8080/" /etc/apache2/httpd.conf && \
 sed -ri -e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' /etc/apache2/httpd.conf && \
@@ -124,6 +123,7 @@ COPY contrib/www.conf /php-fpm/www.conf
 
 COPY contrib/prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
 
+
 RUN mkdir -p /opt/composer_env /var/www/html /usr/share/composer_install /usr/share/httpd /var/log/$PHP_VERSION && usermod -u 2190 apache && usermod -aG 0 apache && touch /etc/localtime /etc/timezone && \
 chown -R 2190 /usr/local/bin/composer /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /var/log/apache2 /usr/share/httpd /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chgrp -R 0 /usr/local/bin/composer /php-fpm /var/log/$PHP_VERSION /etc/$PHP_VERSION /opt/composer_env /etc/apache2 /usr/share/apache2/ /usr/share/httpd /var/log/apache2 /usr/lib/apache2 /var/www/html /var/www/localhost/htdocs/ /var/www/logs/ /run/apache2 /etc/timezone /etc/localtime /usr/libexec/s2i && \
@@ -143,6 +143,6 @@ FPM_USER=apache
 
 USER 2190:0
 
-EXPOSE 8080 9253
+EXPOSE 8080
 
 CMD ["/usr/libexec/s2i/run"]

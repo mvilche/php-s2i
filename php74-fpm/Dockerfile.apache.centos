@@ -1,6 +1,6 @@
 FROM centos:7
 ENV PHP_VERSION=php74 \
-COMPOSER_VERSION=2.3.9 \
+COMPOSER_VERSION=2.5.1 \
 EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
 REMI=https://rpms.remirepo.net/enterprise/remi-release-7.rpm \
 LANG=es_ES.UTF-8 \
@@ -18,9 +18,10 @@ LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
       
 
 RUN echo "LANG=$LANG" > /etc/locale.conf && \
-yum update -y && yum --setopt=tsflags=nodocs install $EPEL yum-utils -y && yum --setopt=tsflags=nodocs install $REMI -y && \
-curl –sL https://rpm.nodesource.com/setup_14.x | bash - && \
-yum --enablerepo=remi install nodejs git $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-tidy $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
+yum update -y && yum --setopt=tsflags=nodocs install langpacks-es $EPEL yum-utils -y && yum --setopt=tsflags=nodocs install $REMI -y && \
+sed -i -e '/^failovermethod=/d' /etc/yum.repos.d/*.repo
+
+RUN yum --enablerepo=remi --allowerasing install git $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-tidy $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
 $PHP_VERSION-php-common $PHP_VERSION-php-intl $PHP_VERSION-php-mysqlnd $PHP_VERSION-php-pgsql $PHP_VERSION-php-process $PHP_VERSION-php-geos $PHP_VERSION-php-pecl-geoip $PHP_VERSION-php-mbstring $PHP_VERSION-php-pecl-zip $PHP_VERSION-php-gd $PHP_VERSION-php-ldap \
 $PHP_VERSION-php-bcmath $PHP_VERSION-php-mcrypt httpd openssl unzip curl nc which $PHP_VERSION-php-pecl-apcu -y
 

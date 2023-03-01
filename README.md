@@ -21,7 +21,7 @@ https://github.com/openshift/source-to-image
 - Okd Ready!
 - Kubernetes Ready!
 - S2i build images
-- Composer and npm
+- Composer and 
 - Artisan Migrations
 - Composer Nexus private repository
 - Composer Version 2.3.9
