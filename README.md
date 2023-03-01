@@ -127,5 +127,4 @@ https://github.com/openshift/source-to-image
 
 License
 ----
-
-Martin vilche
+MIT License
