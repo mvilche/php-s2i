@@ -9,7 +9,10 @@ Attention: CentOS images will be deprecated on June 30, 2024 (EOL CentOS 7)
 
 https://github.com/openshift/source-to-image
 
+![Docker Stars](https://img.shields.io/docker/stars/mvilche/php-s2i.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/mvilche/php-s2i.svg)
+![Docker Automated](https://img.shields.io/docker/cloud/automated/mvilche/php-s2i)
+![Docker Build](https://img.shields.io/docker/cloud/build/mvilche/php-s2i)
 
 
 # Features
@@ -127,4 +130,5 @@ https://github.com/openshift/source-to-image
 
 License
 ----
-MIT License
+
+Martin vilche

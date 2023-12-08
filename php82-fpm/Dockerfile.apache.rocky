@@ -1,13 +1,12 @@
 FROM rockylinux:9
 
 ENV PHP_VERSION=php82 \
-COMPOSER_VERSION=2.5.1 \
+COMPOSER_VERSION=2.6.3 \
 EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
 REMI=https://rpms.remirepo.net/enterprise/remi-release-9.rpm \
 LANG=es_ES.UTF-8 \
 LANGUAGE=es_ES.UTF-8 \
-LC_COLLATE=C \
-LC_CTYPE=es_ES.UTF-8
+LC_ALL=es_ES.UTF-8
 
 
 LABEL autor="Martin Vilche <mfvilche@gmail.com>" \

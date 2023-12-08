@@ -1,6 +1,6 @@
-FROM almalinux:9
+FROM rockylinux:9
 
-ENV PHP_VERSION=php82 \
+ENV PHP_VERSION=php83 \
 COMPOSER_VERSION=2.6.3 \
 EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
 REMI=https://rpms.remirepo.net/enterprise/remi-release-9.rpm \
@@ -21,33 +21,36 @@ RUN echo "LANG=$LANG" > /etc/locale.conf && \
 yum update -y && yum --setopt=tsflags=nodocs install langpacks-es $EPEL yum-utils -y && yum --setopt=tsflags=nodocs install $REMI -y && \
 sed -i -e '/^failovermethod=/d' /etc/yum.repos.d/*.repo
 
-RUN yum --enablerepo=remi --allowerasing --exclude=httpd install git $PHP_VERSION-php-soap $PHP_VERSION-php-tidy $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
+RUN yum --enablerepo=remi --allowerasing install git $PHP_VERSION-php $PHP_VERSION-php-soap $PHP_VERSION-php-tidy $PHP_VERSION-php-imap $PHP_VERSION-php-fpm $PHP_VERSION-php-opcache $PHP_VERSION-php-pdo $PHP_VERSION-php-xml $PHP_VERSION-php-json $PHP_VERSION-php-cli \
 $PHP_VERSION-php-common $PHP_VERSION-php-intl $PHP_VERSION-php-mysqlnd $PHP_VERSION-php-pgsql $PHP_VERSION-php-process $PHP_VERSION-php-mbstring $PHP_VERSION-php-pecl-zip $PHP_VERSION-php-gd $PHP_VERSION-php-ldap \
-$PHP_VERSION-php-bcmath nginx openssl unzip curl nc which -y
+$PHP_VERSION-php-bcmath httpd openssl unzip curl nc which $PHP_VERSION-php-sodium -y
 
-RUN sed -i -e "s/error_log.*/error_log \/proc\/self\/fd\/2 info;/g" /etc/nginx/nginx.conf && \
-sed -i -e "s/user nginx;//g" /etc/nginx/nginx.conf && \ 
+RUN sed -i -e "s/^Listen 80/Listen 8080/" /etc/httpd/conf/httpd.conf && \
+sed -ri -e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' /etc/httpd/conf/httpd.conf && \  
 sed -i -e "s/^short_open_tag = Off/short_open_tag = On/" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i -e "s/^post_max_size = 8M/post_max_size = 80M/" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i -e "s/^upload_max_filesize = 2M/upload_max_filesize = 40M/" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i -e "s/^LogLevel warn/LogLevel Error/" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i -e "s/memory_limit.*/memory_limit = -1/g" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i "/;session.save_path/c\session.save_path=\/tmp" /etc/opt/remi/$PHP_VERSION/php.ini && \
+sed -i -e "s/^#LoadModule mpm_event_module/LoadModule mpm_event_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
+sed -i -e "s/^LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
+sed -i -e "s/^LoadModule mpm_worker_module/#LoadModule mpm_worker_module/" /etc/httpd/conf.modules.d/00-mpm.conf && \
 sed -i -e "s/^;curl.cainfo =/curl.cainfo='\/etc\/opt\/remi\/$PHP_VERSION\/cacert.pem'/" /etc/opt/remi/$PHP_VERSION/php.ini && \
 sed -i -e "s/^;openssl.cafile=/openssl.cafile='\/etc\/opt\/remi\/$PHP_VERSION\/cacert.pem'/" /etc/opt/remi/$PHP_VERSION/php.ini && \
 curl -o /etc/opt/remi/$PHP_VERSION/cacert.pem https://curl.se/ca/cacert.pem && openssl verify /etc/opt/remi/$PHP_VERSION/cacert.pem
 
-ENV PATH=/opt/remi/$PHP_VERSION/root/usr/bin:/opt/remi/$PHP_VERSION/root/usr/sbin${PATH:+:${PATH}} \
+ENV HOME=/usr/share/httpd \
+APACHE_CONFIGDIR=/etc/httpd \
+PATH=/opt/remi/$PHP_VERSION/root/usr/bin:/opt/remi/$PHP_VERSION/root/usr/sbin${PATH:+:${PATH}} \
 LD_LIBRARY_PATH=/opt/remi/$PHP_VERSION/root/usr/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} \
 MANPATH=/opt/remi/$PHP_VERSION/root/usr/share/man:${MANPATH} \
-HOME=/usr/share/nginx \
-NGINX_CONFIGDIR=/etc/nginx \
-FPM_MAX_CHILDREN=5 \
-NGINX_WORKER_PROCESSES=1 \
-NGINX_WORKER_CONNECTION=1024 \
-NGINX_CLIENT_MAX_BODY_SIZE=0 \
-FPM_GROUP=nginx \
-FPM_USER=nginx
+FPM_MAX_CHILDREN=50 \
+MAX_REQUEST_WORKER=250 \
+SERVER_LIMIT=16 \
+FPM_GROUP=apache \
+FPM_USER=apache
+
 
 
 RUN mkdir -p /php-fpm && echo "VERSION PHP INSTALLED: " && php -version && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
@@ -58,24 +61,16 @@ WORKDIR /var/www/html
 
 
 COPY contrib/s2i/bin/ /usr/libexec/s2i
-
+COPY contrib/apache-security.conf /etc/httpd/conf.d/security.conf
 COPY contrib/info.php /var/www/html/index.php
-
-COPY contrib/nginx-http.conf /etc/nginx/http.d/default.conf
-
-COPY contrib/nginx.conf /etc/nginx/nginx.conf
-
 COPY contrib/www.conf /php-fpm/www.conf
-
 COPY contrib/prometheus/phpfpm_exporter /php-fpm/phpfpm_exporter
 
-COPY contrib/prometheus/nginx-prometheus-exporter /etc/nginx/nginx-prometheus-exporter
-
-RUN mkdir -p /opt/composer_env /etc/nginx/http.d /usr/share/nginx /var/www/html /run/nginx /var/lib/nginx/logs /var/log/nginx && usermod -u 2190 nginx && usermod -aG 0 nginx && rm -rf /etc/nginx/nginx.conf.default /etc/localtime && touch /etc/localtime /etc/timezone && \
+RUN mkdir -p /opt/composer_env /var/www/html/storage/.noDelete && usermod -u 2190 apache && usermod -aG 0 apache && rm -rf /etc/httpd/conf.d/$PHP_VERSION-php.conf /etc/localtime /etc/httpd/conf.d/welcome.conf && touch /etc/localtime /etc/timezone && \
 mkdir -p /usr/share/composer_install && \
-chown  -R 2190 /usr/local/bin/composer /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /usr/share/composer_install /run/nginx /etc/nginx /usr/share/nginx /var/lib/nginx /run/nginx /var/log/nginx /var/www/html /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chgrp -R 0 /usr/local/bin/composer /php-fpm /opt/composer_env /opt/remi /etc/opt/remi /var/opt/remi /var/www/html /usr/share/composer_install /run/nginx /etc/nginx /usr/share/nginx /var/lib/nginx /run/nginx /var/log/nginx /etc/timezone /etc/localtime /usr/libexec/s2i && \
-chmod -R g=u /usr/local/bin/composer /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /run/nginx /etc/nginx /usr/share/nginx /var/lib/nginx /run/nginx /var/log/nginx /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chown  -R 2190 /usr/local/bin/composer /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /usr/share/composer_install /var/www/html /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chgrp -R 0 /usr/local/bin/composer /php-fpm /opt/composer_env /opt/remi /etc/opt/remi /var/opt/remi  /var/www/html  /usr/share/composer_install /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chmod -R g=u /usr/local/bin/composer /php-fpm /opt/composer_env /var/opt/remi /etc/opt/remi /opt/remi /var/www/html /usr/share/composer_install /etc/httpd /var/log/httpd /usr/share/httpd /var/run/httpd /etc/timezone /etc/localtime /usr/libexec/s2i && \
 chmod +x /usr/libexec/s2i/* /php-fpm/phpfpm_exporter /usr/local/bin/composer && \
 chmod g=u -R /usr/local
 
@@ -83,6 +78,6 @@ WORKDIR /var/www/html
 
 USER 2190:0
 
-EXPOSE 8080 9253 9113
+EXPOSE 8080
 
 CMD ["/usr/libexec/s2i/run"]
